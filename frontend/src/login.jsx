@@ -41,24 +41,24 @@ function Login() {
             <div className="header">
                 <div className='text'> Login </div>
             </div>
-            <div className="inputs">
+            <form className="inputs" onSubmit={handleLogin}>
                 <div className='input'>
                     <img src={emailIcon} alt="email" />
-                    <input type="email" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
                 </div>
 
                 <div className='input'>
                     <img src={passwordIcon} alt="password" />
-                    <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} required/>
                 </div>
 
                 <div className='auth-link'>
                     Haven't got an account? <a href="/register">Register here</a>
                 </div>
                 <div className="submit-container">
-                    <div className='submit' onClick={handleLogin}> Login </div>
+                    <button className='submit' type="submit"> Login </button>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }
