@@ -37,7 +37,7 @@ function Register() {
         if (!res.ok) {
             console.log(res)
             const error = await res.json();
-            throw new Error(error.message || "Register Failed!");
+            setError(error.error || 'Registration failed');
         }
         const data = await res.json();
         // save token - need to change

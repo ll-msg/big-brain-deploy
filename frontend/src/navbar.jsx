@@ -32,7 +32,7 @@ function Navbar() {
             <li><Link to="/dashboard">Dashboard</Link></li>
             <li><Link to="/login">Login</Link></li>
             <li><Link to="/register">Register</Link></li>
-            <li onClick={handleLogout}>Logout</li>
+            <li className="logout-link" onClick={handleLogout}>Logout</li>
         </ul>
         </nav>
     );

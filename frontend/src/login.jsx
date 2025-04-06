@@ -10,9 +10,12 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const [error, setError] = useState('');
 
     // login action
     const handleLogin = async(e) => {
+        console.log(email);
+        e.preventDefault();
         const res = await fetch('http://localhost:5005/admin/auth/login', {
             method: 'POST',
             headers: {
@@ -25,7 +28,8 @@ function Login() {
         });
         if (!res.ok) {
             const error = await res.json();
-            throw new Error(error.message || "Login Failed!");
+            console.log(error)
+            setError(error.error || "Login Failed");
         }
         const data = await res.json();
         console.log(res)
@@ -42,6 +46,7 @@ function Login() {
                 <div className='text'> Login </div>
             </div>
             <form className="inputs" onSubmit={handleLogin}>
+                {error && <p className="error-message">{error}</p>}
                 <div className='input'>
                     <img src={emailIcon} alt="email" />
                     <input type="email" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
