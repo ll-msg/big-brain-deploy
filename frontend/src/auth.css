@@ -1,0 +1,91 @@
+body {
+    margin: 0;
+    font-family: Trebuchet MS;
+    height: 100vh;
+    background: #166229;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 530px;
+    margin-top: 200px;
+    background-color: aliceblue;
+    padding-bottom: 30px;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+.text {
+    color:#030303;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.inputs{
+    margin-top: 55px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    width: 380px;
+    height: 50px;
+    background-color: rgb(228, 227, 227);
+    border-radius: 6px;
+}
+
+.input input {
+    height: 50px;
+    width: 400px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    font-family: Courier New;
+    padding-left: 30px;
+    opacity: 0.5;
+}
+
+.input img {
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+
+.auth-link {
+    margin-left: 65px;
+}
+
+.submit-container {
+    display: flex;
+    gap: 30px;
+    margin: 60px auto;
+}
+
+.submit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 170px;
+    height: 50px;
+    color:aliceblue;
+    background-color: #166229;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 17px;
+    font-family: Trebuchet MS;
+    cursor: pointer;
+}
