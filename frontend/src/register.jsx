@@ -17,6 +17,7 @@ function Register() {
       
     // register action
     const handleRegister = async(e) => {
+        e.preventDefault();
         // confirm password
         if (password !== confirmPassword) {
             setError('Passwords do not match');
@@ -38,6 +39,7 @@ function Register() {
             console.log(res)
             const error = await res.json();
             setError(error.error || 'Registration failed');
+            return;
         }
         const data = await res.json();
         // save token - need to change

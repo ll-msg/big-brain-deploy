@@ -16,6 +16,7 @@ function Login() {
     const handleLogin = async(e) => {
         console.log(email);
         e.preventDefault();
+
         const res = await fetch('http://localhost:5005/admin/auth/login', {
             method: 'POST',
             headers: {
@@ -30,6 +31,7 @@ function Login() {
             const error = await res.json();
             console.log(error)
             setError(error.error || "Login Failed");
+            return;
         }
         const data = await res.json();
         console.log(res)
