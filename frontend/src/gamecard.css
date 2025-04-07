@@ -21,3 +21,10 @@
     border-radius: 10px;
     cursor: pointer;
 }
+
+.game-card img {
+    display: flex;
+    height: 50px;
+    width: auto;
+    margin-bottom: 10px;
+}

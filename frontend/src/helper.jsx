@@ -21,3 +21,21 @@ export async function apiCall(method, url, data=null, setError, errorMsg) {
     console.log(returnData)
     return returnData;
 }
+export function fileToDataUrl(file) {
+    const validFileTypes = [ 'image/jpeg', 'image/jpg' ]
+    const valid = validFileTypes.find(type => type === file.type);
+    // Bad data, let's walk away.
+    if (!valid) {
+        return;
+    }
+    
+    const reader = new FileReader();
+    const dataUrlPromise = new Promise((resolve,reject) => {
+        reader.onerror = (e) => {
+          reject("READ FAILED");
+        };
+        reader.onload = () => resolve(reader.result);
+    });
+    reader.readAsDataURL(file);
+    return dataUrlPromise;
+}

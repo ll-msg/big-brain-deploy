@@ -37,6 +37,7 @@ function Login() {
         console.log(res)
         // save token - need to change
         localStorage.setItem("token", data.token);
+        localStorage.setItem("email", email);
         console.log("Successfully login");
         // navigate to home page after registration
         navigate('/dashboard');
