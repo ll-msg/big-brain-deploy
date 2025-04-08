@@ -3,6 +3,7 @@ import { apiCall } from './helper';
 import { useNavigate } from 'react-router-dom';
 import defaultImage from './assets/default-image.jpg';
 import CreateGameModal from './gameModal';
+import Modal from './sessionModal';
 import './gamecard.css'
 import './dashboard.css'
 
@@ -10,15 +11,15 @@ function Dashboard() {
     const [game, setGame] = useState('');
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
-    const [duration, setDuration] = useState('');
     const navigate = useNavigate();
-    const token = localStorage.getItem("token");
+    const [sessionId, setSessionId] = useState("");
+    const [isModalopen, setModalopen] = useState(false);
+
 
     // retrieve games
     const handleGame = async(e) => {
         //e.preventDefault();
         const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
-        console.log("data success");
         // show data
         setGame(data);
     }
@@ -30,22 +31,8 @@ function Dashboard() {
         const originalGames = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
         // copy old games and add the new game
         const newGames = [...originalGames.games, { ...newGame, owner: email }];
-        console.log(newGames);
 
-        const res = await fetch('http://localhost:5005/admin/games', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token ? `Bearer ${token}` : undefined,
-            },
-            body: JSON.stringify({"games": newGames})
-        })
-        if (!res.ok) {
-            const error = await res.json();
-            console.log(error)
-            setError(error.error || "Create game failed");
-            return;
-        }
+        await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": newGames}, setError, "Create game failed");
         // show game
         setGame({...originalGames, games: newGames});
         setShowModal(false);
@@ -55,7 +42,6 @@ function Dashboard() {
     // make a card for each game
     const GameCard = ({game}) => {
         const questionNum = game.questions?.length || 0;
-        console.log(game)
         const thumbnail = game.thumbnail || defaultImage;
         const totalDuration = game.questions?.reduce((acc, q) => acc + (q.limit || 0), 0);
 
@@ -67,6 +53,13 @@ function Dashboard() {
             <p>Total Duration: {totalDuration} </p>
             <button>Edit</button>
             <button>Delete</button>
+            {game.active ? (
+                <button onClick={() => stopGame(game.id)}>Stop Game</button>
+                ) : (
+                <button onClick={() => startGame(game.id)}>Start Game</button>
+            )}
+
+            {game.active && <span className="active-badge">Active</span>}
           </div>
         );
     };
@@ -85,6 +78,35 @@ function Dashboard() {
     const goToQuestions = (gameId) => {
         navigate(`/game/${gameId}`)
     }
+
+    // start a game session
+    const startGame = async(gameId) => {
+        const body = {"mutationType": "START"};
+        const data = await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "Start session failed")
+        setSessionId(data.data.sessionId);
+        setModalopen(true);
+        // live update session status to true
+        setGame(prev => ({
+            games: prev.games.map(g => g.id === gameId ? { ...g, active:true } : g)
+        }));
+    }
+
+    // stop a game session
+    const stopGame = async(gameId) => {
+        const body = {"mutationType": "END"};
+        const data = await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
+        // live update session status to false
+        setGame(prev => ({
+            games: prev.games.map(g => g.id === gameId ? { ...g, active:false } : g)
+        }));
+        const confirm = window.confirm("Would you like to view the results?");
+        if (confirm) {
+            console.log("yes stop")
+            setIsActive(false);
+            //navigate(`/results/${data.sessionId}`);
+        }
+    }
+
     
     useEffect(() => {
         handleGame();
@@ -102,6 +124,13 @@ function Dashboard() {
                     close={() => setShowModal(false)}
                     create={createGame}  
                 />
+            )}
+            {isModalopen && (
+                <Modal onClose={() => setModalopen(false)}>
+                    <p>Game started! Session id: {sessionId}</p>
+                    <button onClick={() => {navigator.clipboard.writeText(sessionId)}}>Copy Id</button>
+                    <button onClick={() => setModalopen(false)}>Close</button>
+                </Modal>
             )}
         </div>
     );

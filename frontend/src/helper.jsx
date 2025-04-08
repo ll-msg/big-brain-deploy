@@ -13,6 +13,7 @@ export async function apiCall(method, url, data=null, setError, errorMsg) {
         body.body = JSON.stringify(data);
     }
     const res = await fetch(url, body);
+    console.log(res)
     if (!res.ok) {
         const error = await res.json();
         setError(error.error || errorMsg);
@@ -57,11 +58,7 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
     // for edit question - automatically set up original data 
     useEffect(() => {
         const loadOriginal = async() => {
-            console.log(mode);
-            console.log(gameId);
-            console.log(questionId)
             if (mode === 'edit' && gameId && questionId) {
-                console.log("hello???")
                 const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, 'Failed to load game');
                 const game = data.games.find(g => g.id === Number(gameId));
                 if (!game) return;
@@ -82,7 +79,7 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
     const handleSubmit = (e) => {
         e.preventDefault();
         const newQuestion = {
-            id: mode === 'create' ? Math.floor(Date.now() + Math.random() * 1000) : questionId,
+            id: mode === 'create' ? Math.floor(Date.now() + Math.random() * 1000).toString()  : questionId.toString() ,
             question,
             type,
             limit: Number(limit),
