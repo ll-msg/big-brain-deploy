@@ -4,6 +4,7 @@ import Login from './login';
 import Register from './register'
 import Navbar from './navbar';
 import Dashboard from './dashboard';
+import Questions from './questions';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -15,6 +16,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
         <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/game/:gameId' element={<Questions />} />
       </Routes>
     </>
   )

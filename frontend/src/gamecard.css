@@ -28,3 +28,7 @@
     width: auto;
     margin-bottom: 10px;
 }
+
+.questions {
+    cursor: pointer;
+}

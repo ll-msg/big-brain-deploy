@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { apiCall, fileToDataUrl } from './helper';
+import { apiCall } from './helper';
+import { useNavigate } from 'react-router-dom';
 import defaultImage from './assets/default-image.jpg';
-import CreateGameModal from './modal';
+import CreateGameModal from './gameModal';
 import './gamecard.css'
 import './dashboard.css'
 
@@ -9,6 +10,8 @@ function Dashboard() {
     const [game, setGame] = useState('');
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [duration, setDuration] = useState('');
+    const navigate = useNavigate();
     const token = localStorage.getItem("token");
 
     // retrieve games
@@ -16,7 +19,6 @@ function Dashboard() {
         //e.preventDefault();
         const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
         console.log("data success");
-        console.log(data);
         // show data
         setGame(data);
     }
@@ -53,13 +55,14 @@ function Dashboard() {
     // make a card for each game
     const GameCard = ({game}) => {
         const questionNum = game.questions?.length || 0;
+        console.log(game)
         const thumbnail = game.thumbnail || defaultImage;
         return (
           <div className="game-card">
             <h3>{game.name}</h3>
-            <p>Questions: {questionNum}</p>
+            <p className='questions' onClick={() => goToQuestions(game.id)}>Questions: {questionNum}</p>
             <img src={thumbnail} alt="thumbnail" className="game-thumbnail" />
-            <p>Total Duration: </p>
+            <p>Total Duration: {setDuration} </p>
             <button>Edit</button>
             <button>Delete</button>
           </div>
@@ -74,6 +77,11 @@ function Dashboard() {
         return game.games.map((game) => (
             <GameCard key={game.id} game={game} />
         ));
+    }
+
+    // go to question list of the game
+    const goToQuestions = (gameId) => {
+        navigate(`/game/${gameId}`)
     }
     
     useEffect(() => {
