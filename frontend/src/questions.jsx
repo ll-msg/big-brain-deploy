@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { apiCall } from './helper';
 import CreateQuestionModal from './questionModal';
 
@@ -8,6 +8,7 @@ function Questions() {
     const [questions, setQuestions] = useState([]);
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
 
     const loadQuestions = async(e) => {
         const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
@@ -28,7 +29,8 @@ function Questions() {
         });
 
         // update games
-        apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Update game data failed")
+        console.log(updatedGames)
+        const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Update game data failed")
     
         console.log("create success!")
         // live update
@@ -36,9 +38,7 @@ function Questions() {
         setShowModal(false);
     };
 
-    // TODO: update question
 
-    // TODO: delete question
     const deleteQuestion = async(questionId) => {
         const games = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
         const updatedGames = games.games.map(game => {
@@ -52,7 +52,7 @@ function Questions() {
         });
 
         // delete question and update games
-        apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Delete game data failed")
+        const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Delete game data failed")
         console.log("delete success!")
         setQuestions(prev => prev.filter(q => q.id !== questionId));
     }
@@ -72,7 +72,7 @@ function Questions() {
                 <p><strong>Q{i + 1}:</strong> {q.question}</p>
                 <p>Duration: {q.limit}</p>
                 <p>Points: {q.points}</p>
-                <button>Edit</button>
+                <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>
                 <button onClick={() => deleteQuestion(q.id)}>Delete</button>
             </div>
         ))}
@@ -81,6 +81,7 @@ function Questions() {
             <CreateQuestionModal
                 close={() => setShowModal(false)}
                 create={createQuestion}  
+                gameId={gameId}
             />
         )}
     </div>

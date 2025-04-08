@@ -57,12 +57,14 @@ function Dashboard() {
         const questionNum = game.questions?.length || 0;
         console.log(game)
         const thumbnail = game.thumbnail || defaultImage;
+        const totalDuration = game.questions?.reduce((acc, q) => acc + (q.limit || 0), 0);
+
         return (
           <div className="game-card">
             <h3>{game.name}</h3>
             <p className='questions' onClick={() => goToQuestions(game.id)}>Questions: {questionNum}</p>
             <img src={thumbnail} alt="thumbnail" className="game-thumbnail" />
-            <p>Total Duration: {setDuration} </p>
+            <p>Total Duration: {totalDuration} </p>
             <button>Edit</button>
             <button>Delete</button>
           </div>

@@ -5,9 +5,9 @@ import Register from './register'
 import Navbar from './navbar';
 import Dashboard from './dashboard';
 import Questions from './questions';
+import QuestionEdit from './questionEdit';
 
 function App() {
-  const [count, setCount] = useState(0);
   
   return (
     <>
@@ -17,6 +17,7 @@ function App() {
         <Route path='/register' element={<Register />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/game/:gameId' element={<Questions />} />
+        <Route path='/game/:gameId/question/:questionId' element={<QuestionEdit />} />
       </Routes>
     </>
   )
