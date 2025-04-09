@@ -5,16 +5,38 @@ import { apiCall } from './helper';
 function Result() {
     const [error, setError] = useState('');
     const { sessionId } = useParams();
+    const gameId = localStorage.getItem(`session:${sessionId}:gameId`);
     const [results, setResults] = useState(null);
+    const [countdown, setCountdown] = useState("");
+    let current = "";
 
+    const checkSession = async(e) => {
+        // get current status of the game session
+        const res = await apiCall('GET', `http://localhost:5005/admin/session/${sessionId}/status`, null, setError, "Retrieve status failed");
+        setResults(res.results);
+    }
+
+    // calculate countdown timw
+    const countDown = () => {
+        const startTime = new Date(results.isoTimeLastQuestionStarted).getTime();
+        const limit = results.questions[results.position].limit * 1000;
+        const leftTime = Math.max(0, Math.floor((startTime + limit - Date.now()) / 1000));
+        setCountdown(leftTime);
+    }
+
+    // show questions
     useEffect(() => {
-        const checkSession = async(e) => {
-            // get current status of the game session
-            const res = await apiCall('GET', `http://localhost:5005/admin/session/${sessionId}/status`, null, setError, "Retrieve status failed");
-            setResults(res.results);
-        }
         checkSession();
     }, [sessionId]);
+
+    // show countdown
+    useEffect(() => {
+        if (!results || results.position === -1) return;
+    
+        countDown();
+        const timer = setInterval(countDown, 1000);
+        return () => clearInterval(timer);
+    }, [results]);
 
     // wait to load results
     if (!results) {
@@ -25,18 +47,31 @@ function Result() {
         return (<p>The game hasn't started yet</p>);
     }
     if (results.position !== -1) {
-        const current = results.questions[results.position]
+        current = results.questions[results.position]
     }
 
     // advance question
-    const advanceQuestion = () => {
-        console.log("1")
+    const advanceQuestion = async() => {
+        // advance to last question then stop session
+        let isLast = false;
+        if (results.position === results.questions.length - 1) isLast = true;
+        if(isLast) {
+            await(stopSession());
+            return;
+        } 
+        
+        const body = {"mutationType": "ADVANCE"};
+        await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "Advance session failed");
+        await checkSession();
     }
 
     // stop session
-    const stopSession = () => {
-        console.log("2")
+    const stopSession = async() => {
+        const body = {"mutationType": "END"};
+        await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
+        console.log("success stop session");
     }
+
 
     return (
         <div className="session-container">
@@ -56,7 +91,8 @@ function Result() {
                         <li key={i}>{a.text}</li>
                     ))}
                     </ul>
-                    <button onClick={advanceQuestion}>Next</button>
+                    {countdown !== null && (<p>Time left: {countdown} seconds</p>)}
+                    <button onClick={advanceQuestion}>Next Question</button>
                     <button onClick={stopSession}>Stop Session</button>
                 </>
             )}

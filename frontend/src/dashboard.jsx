@@ -58,8 +58,8 @@ function Dashboard() {
                 ) : (
                 <button onClick={() => startGame(game.id)}>Start Game</button>
             )}
-
-            {game.active && <span className="active-badge">Active</span>}
+            {game.active && <button onClick={() => navigate(`/session/${sessionId}`)}>Manage session</button>}
+            {game.active && <span className="active-visual">Active</span>}
           </div>
         );
     };
@@ -89,6 +89,7 @@ function Dashboard() {
         setGame(prev => ({
             games: prev.games.map(g => g.id === gameId ? { ...g, active:true } : g)
         }));
+        localStorage.setItem(`session:${data.data.sessionId}:gameId`, gameId)
     }
 
     // stop a game session
