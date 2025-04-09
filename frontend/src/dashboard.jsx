@@ -94,7 +94,7 @@ function Dashboard() {
     // stop a game session
     const stopGame = async(gameId) => {
         const body = {"mutationType": "END"};
-        const data = await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
+        await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
         // live update session status to false
         setGame(prev => ({
             games: prev.games.map(g => g.id === gameId ? { ...g, active:false } : g)
