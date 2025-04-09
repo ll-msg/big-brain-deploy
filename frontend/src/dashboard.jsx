@@ -101,9 +101,8 @@ function Dashboard() {
         }));
         const confirm = window.confirm("Would you like to view the results?");
         if (confirm) {
-            console.log("yes stop")
-            setIsActive(false);
-            //navigate(`/results/${data.sessionId}`);
+            console.log("stop success");
+            navigate(`/session/${sessionId}`);
         }
     }
 

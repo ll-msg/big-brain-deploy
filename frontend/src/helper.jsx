@@ -42,10 +42,10 @@ export function fileToDataUrl(file) {
     return dataUrlPromise;
 }
 
-
 // edit question form
 export default function QuestionForm({ mode, questionId, gameId, onSubmit, close }) {
     const [question, setQuestion] = useState('');
+    const [questions, setQuestions] = useState('');
     const [type, setType] = useState('single choice');
     const [limit, setLimit] = useState(30);
     const [points, setPoints] = useState(100);
@@ -58,13 +58,16 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
     // for edit question - automatically set up original data 
     useEffect(() => {
         const loadOriginal = async() => {
+            const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, 'Failed to load game');
+            const game = data.games.find(g => g.id === Number(gameId));
+            if (!game) return;
+
+            console.log(game.questions);
+            setQuestions(game.questions);
+
             if (mode === 'edit' && gameId && questionId) {
-                const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, 'Failed to load game');
-                const game = data.games.find(g => g.id === Number(gameId));
-                if (!game) return;
                 const q = game.questions.find(q => q.id === questionId || Number(q.id) === Number(questionId));
                 if (!q) return;
-
                 // fill in data
                 setQuestion(q.question);
                 setType(q.type);
@@ -76,10 +79,17 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
         loadOriginal();
     }, [mode, gameId. questionId]);
 
+    const generateQuestionId = (curQuestions) => {
+        console.log(curQuestions)
+        const ids = curQuestions.map(q => Number(q.id));
+        const max_id = ids > 0 ? Math.max(...ids) : 0;
+        return (max_id + 1).toString();
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const newQuestion = {
-            id: mode === 'create' ? Math.floor(Date.now() + Math.random() * 1000).toString()  : questionId.toString() ,
+            id: mode === 'create' ? generateQuestionId(questions)  : questionId.toString() ,
             question,
             type,
             limit: Number(limit),
@@ -91,6 +101,7 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
       
     return (
         <form onSubmit={handleSubmit} className="question-form">
+            {error && <p className="error-message">{error}</p>}
             <input type="text" value={question} placeholder='Enter question' onChange={(e) => setQuestion(e.target.value)} />
             <select id="question-type" value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="single choice">Single Choice</option>
