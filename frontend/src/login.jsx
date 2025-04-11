@@ -38,6 +38,8 @@ function Login() {
         // save token - need to change
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", email);
+        // set logged in status for navbar change
+        window.dispatchEvent(new Event('loggedIn'));
         console.log("Successfully login");
         // navigate to home page after registration
         navigate('/dashboard');

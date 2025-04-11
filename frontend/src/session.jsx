@@ -5,7 +5,7 @@ import { apiCall } from './helper';
 function Result() {
     const [error, setError] = useState('');
     const { sessionId } = useParams();
-    const gameId = localStorage.getItem(`session:${sessionId}:gameId`);
+    const gameId = localStorage.getItem(`session:${sessionId}`);
     const [results, setResults] = useState(null);
     const [countdown, setCountdown] = useState("");
     let current = "";
@@ -69,6 +69,7 @@ function Result() {
     const stopSession = async() => {
         const body = {"mutationType": "END"};
         await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
+        localStorage.removeItem(`session:${sessionId}`);
         console.log("success stop session");
     }
 

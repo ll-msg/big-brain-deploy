@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -6,6 +6,17 @@ import './navbar.css'
 
 function Navbar() {
     const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const checkLogin = () => {
+            const token = localStorage.getItem('token');
+            setIsLoggedIn(!!token);
+        }
+        checkLogin();
+        window.addEventListener('loggedIn', checkLogin);
+        return () => window.removeEventListener('loggedIn', checkLogin);
+    }, []);
 
     const handleLogout = async() => {
         // clear token - need to change
@@ -22,6 +33,7 @@ function Navbar() {
             throw new Error('Logout failed');
         }
         localStorage.removeItem('token');
+        setIsLoggedIn(false);
         navigate('/login');
     }
 
@@ -30,9 +42,17 @@ function Navbar() {
         <div className="nav-logo">BigBrain</div>
         <ul className="nav-links">
             <li><Link to="/dashboard">Dashboard</Link></li>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/register">Register</Link></li>
-            <li className="logout-link" onClick={handleLogout}>Logout</li>
+            {!isLoggedIn && (
+                <>
+                    <li><Link to="/login">Login</Link></li>
+                    <li><Link to="/register">Register</Link></li>
+                </>
+            )}
+            <li><Link to="/session/join">Join Game</Link></li>
+            {isLoggedIn && (
+                <li className="logout-link" onClick={handleLogout}>Logout</li>
+            )}
+            
         </ul>
         </nav>
     );

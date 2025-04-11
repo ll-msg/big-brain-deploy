@@ -89,7 +89,7 @@ function Dashboard() {
         setGame(prev => ({
             games: prev.games.map(g => g.id === gameId ? { ...g, active:true } : g)
         }));
-        localStorage.setItem(`session:${data.data.sessionId}:gameId`, gameId)
+        localStorage.setItem(`session:${data.data.sessionId}`, gameId)
     }
 
     // stop a game session
