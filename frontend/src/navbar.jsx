@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
-import './navbar.css'
+import './main.css'
 
 function Navbar() {
     const navigate = useNavigate();
@@ -38,22 +37,21 @@ function Navbar() {
     }
 
     return (
-        <nav className="navbar">
-        <div className="nav-logo">BigBrain</div>
-        <ul className="nav-links">
-            <li><Link to="/dashboard">Dashboard</Link></li>
+        <nav className="flex justify-between items-center bg-green-800 px-5 py-2">
+          <div className="text-white text-2xl font-bold">BigBrain</div>
+          <ul className="flex gap-5 list-none">
             {!isLoggedIn && (
-                <>
-                    <li><Link to="/login">Login</Link></li>
-                    <li><Link to="/register">Register</Link></li>
-                </>
+              <>
+                <li><Link to="/login" className="text-white no-underline hover:underline">Login</Link></li>
+                <li><Link to="/register" className="text-white no-underline hover:underline">Register</Link></li>
+              </>
             )}
-            <li><Link to="/session/join">Join Game</Link></li>
+            <li><Link to="/dashboard" className="text-white no-underline hover:underline">Dashboard</Link></li>
+            <li><Link to="/session/join" className="text-white no-underline hover:underline">Join Game</Link></li>
             {isLoggedIn && (
-                <li className="logout-link" onClick={handleLogout}>Logout</li>
+              <li onClick={handleLogout} className="text-white cursor-pointer hover:underline">Logout</li>
             )}
-            
-        </ul>
+          </ul>
         </nav>
     );
 }

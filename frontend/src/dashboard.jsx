@@ -5,7 +5,6 @@ import defaultImage from './assets/default-image.jpg';
 import CreateGameModal from './gameModal';
 import Modal from './sessionModal';
 import './gamecard.css'
-import './dashboard.css'
 
 function Dashboard() {
     const [game, setGame] = useState('');
@@ -32,10 +31,13 @@ function Dashboard() {
         // copy old games and add the new game
         const newGames = [...originalGames.games, { ...newGame, owner: email }];
 
-        await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": newGames}, setError, "Create game failed");
+        console.log(newGames);
+
+        const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": newGames}, setError, "Create game failed");
+        setShowModal(false);
+        if (!res) return;
         // show game
         setGame({...originalGames, games: newGames});
-        setShowModal(false);
         console.log("creation success");
     }
     
@@ -43,7 +45,7 @@ function Dashboard() {
     const GameCard = ({game}) => {
         const questionNum = game.questions?.length || 0;
         const thumbnail = game.thumbnail || defaultImage;
-        const totalDuration = game.questions?.reduce((acc, q) => acc + (q.limit || 0), 0);
+        const totalDuration = game.questions?.reduce((acc, q) => acc + (q.limit || 0), 0) || 0;
 
         return (
           <div className="game-card">

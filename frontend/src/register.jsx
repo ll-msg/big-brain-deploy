@@ -4,7 +4,6 @@ import userIcon from './assets/user.png'
 import emailIcon from './assets/email.png'
 import passwordIcon from './assets/password.png'
 
-import './auth.css';
 
 function Register() {
 
@@ -50,42 +49,76 @@ function Register() {
     }
 
     return (
-        <div className = 'container'>
-            <div className="header">
-                <div className='text'> Sign up </div>
+        <div className="flex flex-col w-[530px] bg-[#166229] mt-[200px] mx-auto pb-[30px]">
+          <div className="flex flex-col items-center gap-[9px] w-full mt-[30px]">
+            <div className="text-[#030303] text-[40px] font-bold">Sign up</div>
+          </div>
+          <form className="flex flex-col mt-[55px] gap-[25px]" onSubmit={handleRegister}>
+            {error && <p className="text-red-600 text-center">{error}</p>}
+    
+            <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
+              <img src={userIcon} alt="username" className="w-[20px] h-[20px] ml-[10px]" />
+              <input
+                type="text"
+                placeholder="UserName"
+                className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
             </div>
-            <form className="inputs" onSubmit={handleRegister}>
-                {error && <p className="error-message">{error}</p>}
-                <div className='input'>
-                    <img src={userIcon} alt="Name" />
-                    <input type="text" placeholder='UserName' value={username} onChange={(e) => setUsername(e.target.value)} required/>
-                </div>
-
-                <div className='input'>
-                    <img src={emailIcon} alt="email" />
-                    <input type="email" placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
-                </div>
-
-                <div className='input'>
-                    <img src={passwordIcon} alt="password" />
-                    <input type="password" placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} required/>
-                </div>
-
-                <div className='input'>
-                    <img src={passwordIcon} alt="password" />
-                    <input type="password" placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required/>
-                </div>
-
-                <div className='auth-link'>
-                    Already had an account? <a href="/login">Login here</a>
-                </div>
-
-                <div className="submit-container">
-                    <button className="submit" type="submit">Sign Up</button>
-                </div>
-            </form>
+    
+            <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
+              <img src={emailIcon} alt="email" className="w-[20px] h-[20px] ml-[10px]" />
+              <input
+                type="email"
+                placeholder="Email"
+                className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+    
+            <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
+              <img src={passwordIcon} alt="password" className="w-[20px] h-[20px] ml-[10px]" />
+              <input
+                type="password"
+                placeholder="Password"
+                className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+    
+            <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
+              <img src={passwordIcon} alt="confirm-password" className="w-[20px] h-[20px] ml-[10px]" />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+    
+            <div className="ml-[65px]">
+              Already had an account? <a href="/login" className="text-blue-600 underline">Login here</a>
+            </div>
+    
+            <div className="flex gap-[30px] mx-auto mt-[60px]">
+              <button
+                className="w-[170px] h-[50px] text-[aliceblue] bg-[#166229] rounded-[40px] font-bold text-[17px] font-[Trebuchet_MS] cursor-pointer"
+                type="submit"
+              >
+                Sign Up
+              </button>
+            </div>
+          </form>
         </div>
-    )
+    );
 }
 
 export default Register;
