@@ -13,14 +13,12 @@ export async function apiCall(method, url, data=null, setError, errorMsg) {
         body.body = JSON.stringify(data);
     }
     const res = await fetch(url, body);
-    console.log(res)
     if (!res.ok) {
         const error = await res.json();
         setError(error.error || errorMsg);
         return;
     }
     const returnData = await res.json();
-    console.log(returnData)
     return returnData;
 }
 export function fileToDataUrl(file) {
@@ -71,7 +69,7 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
                 // fill in data
                 setQuestion(q.question);
                 setType(q.type);
-                setLimit(q.limit);
+                setLimit(q.duration);
                 setPoints(q.points);
                 setAnswer(q.answers || []);
             }
@@ -88,12 +86,15 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(limit);
+        const correctAnswers = answer.filter((a) => a.correct).map((a) => a.text.trim());
         const newQuestion = {
             id: mode === 'create' ? generateQuestionId(questions)  : questionId.toString() ,
             question,
             type,
-            limit: Number(limit),
+            duration: Number(limit),
             points: Number(points),
+            correctAnswers: correctAnswers,
             answers: answer,
         };
         onSubmit(newQuestion);

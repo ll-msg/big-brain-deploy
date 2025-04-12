@@ -4,6 +4,7 @@ import QuestionForm from './helper';
 function CreateQuestionModal({ close, create, gameId }) {
 
     const handleSubmit = (newQuestion) => {
+        console.log(newQuestion.duration)
         create(newQuestion);
     }
 

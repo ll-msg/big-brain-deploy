@@ -47,7 +47,7 @@ function Result() {
         return (<p>The game hasn't started yet</p>);
     }
     if (results.position !== -1) {
-        current = results.questions[results.position]
+        current = results.questions[results.position];
     }
 
     // advance question

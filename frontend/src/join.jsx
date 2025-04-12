@@ -18,6 +18,7 @@ function Join() {
         localStorage.setItem('player', username);
         const res = await apiCall('POST', `http://localhost:5005/play/join/${sessionId}`, body, setError, "Failed to join the game");
         setPlayerId(res.playerId);
+        localStorage.setItem('playerId', res.playerId);
         navigate(`/session/play/${sessionId}`);
     }
 

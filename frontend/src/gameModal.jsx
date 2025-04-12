@@ -13,11 +13,12 @@ function CreateGameModal({ close, create }) {
         setThumbnail(encodedImg);
     }
 
+    // TODO: Add thumbnail & video url back
     const handleSubmit = () => {
         const newGame = ({
-            id: uniqueId,
+            gameId: uniqueId,
             name,
-            thumbnail,
+            
             questions: [],
             active: false,
             createdAt: new Date().toISOString(),
@@ -25,6 +26,7 @@ function CreateGameModal({ close, create }) {
         create(newGame);
     }
 
+    // TODO: Add thumbnail & video url back
     return (
         <div className="modal-container">
             <div className="modal-header">
@@ -32,7 +34,7 @@ function CreateGameModal({ close, create }) {
             </div>
             <div className="modal-body">
                 <input type="text" value={name} placeholder='Enter game name' onChange={(e) => setName(e.target.value)} />
-                <input type="file" accept="image/*" onChange={handleThumbNail} />
+
             </div>
             <div className="modal-button">
                 <button onClick={handleSubmit}>Create</button>

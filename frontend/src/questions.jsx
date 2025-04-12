@@ -12,7 +12,9 @@ function Questions() {
 
     const loadQuestions = async(e) => {
         const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
+        if (!data) return;
         const curGame = data.games.find((element) => element.id === Number(gameId));
+        console.log(curGame);
         setQuestions(curGame.questions || []);
     }
 
@@ -21,7 +23,7 @@ function Questions() {
         const games = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
         const updatedGames = games.games.map(game => {
             if (game.id === Number(gameId)) {
-                const updatedQuestions = [...(game.questions) || [], newQuestion];
+                const updatedQuestions = [...(game.questions || []), newQuestion];
                 return {...game, questions: updatedQuestions};
             } else {
                 return game;
@@ -31,7 +33,7 @@ function Questions() {
         // update games
         console.log(updatedGames)
         const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Update game data failed")
-    
+        if (!res) return;
         console.log("create success!")
         // live update
         setQuestions(prev => [...prev, newQuestion])
@@ -53,6 +55,7 @@ function Questions() {
 
         // delete question and update games
         const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Delete game data failed")
+        if (!res) return;
         console.log("delete success!")
         setQuestions(prev => prev.filter(q => q.id !== questionId));
     }
@@ -70,7 +73,7 @@ function Questions() {
             <div key={i} className="game-card">
                 <p>{q.type}</p>
                 <p><strong>Q{i + 1}:</strong> {q.question}</p>
-                <p>Duration: {q.limit}</p>
+                <p>Duration: {q.duration}</p>
                 <p>Points: {q.points}</p>
                 <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>
                 <button onClick={() => deleteQuestion(q.id)}>Delete</button>
