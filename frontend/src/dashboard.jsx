@@ -37,8 +37,24 @@ function Dashboard() {
         setShowModal(false);
         if (!res) return;
         // show game
-        setGame({...originalGames, games: newGames});
+        const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
+        setGame(data);
         console.log("creation success");
+    }
+
+    // delete a game
+    const deleteGame = async(gameId) => {
+        const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
+        if (!data) {
+            setError("Games not found");
+            return;
+        };
+        const updatedGames = data.games.filter((g) => Number(g.gameId) !== Number(gameId));
+        const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Failed to delete games");
+        if (!res) return;
+        const updated_data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
+        setGame(updated_data);
+        console.log('delete success');
     }
     
     // make a card for each game
@@ -50,15 +66,15 @@ function Dashboard() {
         return (
           <div className="game-card">
             <h3>{game.name}</h3>
-            <p className='questions' onClick={() => goToQuestions(game.id)}>Questions: {questionNum}</p>
+            <p className='questions' onClick={() => goToQuestions(game.gameId)}>Questions: {questionNum}</p>
             <img src={thumbnail} alt="thumbnail" className="game-thumbnail" />
             <p>Total Duration: {totalDuration} </p>
             <button>Edit</button>
-            <button>Delete</button>
+            <button onClick={() => deleteGame(game.gameId)}>Delete</button>
             {game.active ? (
-                <button onClick={() => stopGame(game.id)}>Stop Game</button>
+                <button onClick={() => stopGame(game.gameId)}>Stop Game</button>
                 ) : (
-                <button onClick={() => startGame(game.id)}>Start Game</button>
+                <button onClick={() => startGame(game.gameId)}>Start Game</button>
             )}
             {game.active && <button onClick={() => navigate(`/session/${sessionId}`)}>Manage session</button>}
             {game.active && <span className="active-visual">Active</span>}
@@ -72,7 +88,7 @@ function Dashboard() {
             return <p>Currently no games</p>
         }
         return game.games.map((game) => (
-            <GameCard key={game.id} game={game} />
+            <GameCard key={game.gameId} game={game} />
         ));
     }
 
@@ -89,7 +105,7 @@ function Dashboard() {
         setModalopen(true);
         // live update session status to true
         setGame(prev => ({
-            games: prev.games.map(g => g.id === gameId ? { ...g, active:true } : g)
+            games: prev.games.map(g => g.gameId === gameId ? { ...g, active:true } : g)
         }));
         localStorage.setItem(`session:${data.data.sessionId}`, gameId)
     }
@@ -100,7 +116,7 @@ function Dashboard() {
         await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
         // live update session status to false
         setGame(prev => ({
-            games: prev.games.map(g => g.id === gameId ? { ...g, active:false } : g)
+            games: prev.games.map(g => g.gameId === gameId ? { ...g, active:false } : g)
         }));
         const confirm = window.confirm("Would you like to view the results?");
         if (confirm) {

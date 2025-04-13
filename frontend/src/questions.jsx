@@ -5,17 +5,26 @@ import CreateQuestionModal from './questionModal';
 
 function Questions() {
     const { gameId } = useParams();
+    const [loading, setLoading] = useState(true);
     const [questions, setQuestions] = useState([]);
     const [error, setError] = useState('');
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     const loadQuestions = async(e) => {
+        // start to load the questions
+        setLoading(true);
         const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Retrieve game data failed");
+        // handle situation when game data has not been added yet
         if (!data) return;
         const curGame = data.games.find((element) => element.id === Number(gameId));
+        if (!curGame) {
+            setLoading(false);
+            return;
+        }
         console.log(curGame);
         setQuestions(curGame.questions || []);
+        setLoading(false);
     }
 
     const createQuestion = async(newQuestion) => {
@@ -67,27 +76,41 @@ function Questions() {
 
 
     return (
-    <div className='question-list'>
+        <div className='question-list'>
         {error && <p className="error-message">{error}</p>}
-        {questions.map((q, i) => (
-            <div key={i} className="game-card">
-                <p>{q.type}</p>
-                <p><strong>Q{i + 1}:</strong> {q.question}</p>
-                <p>Duration: {q.duration}</p>
-                <p>Points: {q.points}</p>
-                <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>
-                <button onClick={() => deleteQuestion(q.id)}>Delete</button>
+      
+        {loading ? (
+          <p>Loading questions now... Please wait for a moment</p>
+        ) : questions.length === 0 ? (
+          <p>No questions yet. Click below to create one!</p>
+        ) : (
+          questions.map((q, i) => (
+            <div key={q.id || i} className="game-card">
+              <p>{q.type}</p>
+              <p><strong>Q{i + 1}:</strong> {q.question}</p>
+              <p>Duration: {q.duration}</p>
+              <p>Points: {q.points}</p>
+              <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>
+              <button onClick={() => deleteQuestion(q.id)}>Delete</button>
             </div>
-        ))}
-        <button className="submit-question" type="submit" onClick={() => setShowModal(true)}>Create a new question</button>
-        {showModal && (
-            <CreateQuestionModal
-                close={() => setShowModal(false)}
-                create={createQuestion}  
-                gameId={gameId}
-            />
+          ))
         )}
-    </div>
+
+        {!loading && (
+          <>
+            <button className="submit-question" type="submit" onClick={() => setShowModal(true)}>
+              Create a new question
+            </button>
+            {showModal && (
+              <CreateQuestionModal
+                close={() => setShowModal(false)}
+                create={createQuestion}
+                gameId={gameId}
+              />
+            )}
+          </>
+        )}
+      </div>      
     );
 };
 
