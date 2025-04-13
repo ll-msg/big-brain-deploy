@@ -63,7 +63,7 @@ function Questions() {
         });
 
         // delete question and update games
-        const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Delete game data failed")
+        const res = await apiCall('PUT', 'http://localhost:5005/admin/games', {"games": updatedGames}, setError, "Delete question failed")
         if (!res) return;
         console.log("delete success!")
         setQuestions(prev => prev.filter(q => q.id !== questionId));
@@ -87,7 +87,7 @@ function Questions() {
           questions.map((q, i) => (
             <div key={q.id || i} className="game-card">
               <p>{q.type}</p>
-              <p><strong>Q{i + 1}:</strong> {q.question}</p>
+              <p><strong>Q{q.id}:</strong> {q.question}</p>
               <p>Duration: {q.duration}</p>
               <p>Points: {q.points}</p>
               <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>

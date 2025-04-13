@@ -19,7 +19,7 @@ function Result() {
     // calculate countdown timw
     const countDown = () => {
         const startTime = new Date(results.isoTimeLastQuestionStarted).getTime();
-        const limit = results.questions[results.position].limit * 1000;
+        const limit = results.questions[results.position].duration * 1000;
         const leftTime = Math.max(0, Math.floor((startTime + limit - Date.now()) / 1000));
         setCountdown(leftTime);
     }
@@ -81,6 +81,7 @@ function Result() {
                 <>
                     <p>The game hasn't started yet.</p>
                     <button onClick={advanceQuestion}>Advance</button>
+                    <br />
                     <button onClick={stopSession}>Stop Session</button>
                 </>
                 ) : (

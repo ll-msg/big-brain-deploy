@@ -8,8 +8,10 @@ function Play() {
     const [error, setError] = useState('');
     const [curquestion, setcurQuestion] = useState(null);
     const [locked, setLocked] = useState('');
+    const [showAnswer, setShowAnswers] = useState(false);
     const [countdown, setCountdown] = useState("");
     const [selectedAnswers, setSelectedAnswers] = useState([]);
+    const [correctAnswers, setCorrectAnswers] = useState([]);
 
     // check session status
     const isStarted = async(e) => {
@@ -28,7 +30,12 @@ function Play() {
     const getCurQuestion = async(e) => {
         const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/question`, null, setError, "Failed to retrieve current question");
         if (res) {
-            setcurQuestion(res.question);
+            if (!curquestion || res.question.id !== curquestion.id) {
+                setcurQuestion(res.question);
+                setSelectedAnswers([]);
+                setShowAnswers(false);
+                setLocked(false);  
+            }
         }
     }
 
@@ -38,7 +45,15 @@ function Play() {
         }, 1000);
         return () => clearInterval(interval);
     }, []);
-      
+    
+    // get correct answers
+    const getCorrectAnswer = async() => {
+        console.log("hello?????")
+        const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/answer`, null, setError, "Failed to get correct answers");
+        if (res) {
+            setCorrectAnswers(res.answerIds);
+        }
+    }
 
     // set countdown
     const countDown = () => {
@@ -49,6 +64,8 @@ function Play() {
         // can not answer after time is up
         if (leftTime === 0) {
             setLocked(true);
+            setShowAnswers(true);
+            getCorrectAnswer();
         } else {
             setLocked(false);
         }
@@ -89,8 +106,8 @@ function Play() {
             console.log("send!")
         }
     }
-      
-      
+    console.log(correctAnswers);
+
     // session not start
     if (!status) return <p>Please wait...</p>;
     
@@ -111,6 +128,18 @@ function Play() {
                     </li>
                 ))}
             </ul>
+            {showAnswer && (
+                <div>
+                    <p className="font-bold">Correct Answers: </p>
+                    <ul className="list-disc list-inside">
+                        {curquestion.answers
+                            .filter(a => correctAnswers.includes(a.text)) 
+                            .map((a, i) => (
+                            <li key={i}>{a.text}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     )
 }
