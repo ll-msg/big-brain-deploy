@@ -6,9 +6,10 @@ import Navbar from './navbar';
 import Dashboard from './dashboard';
 import Questions from './questions';
 import QuestionEdit from './questionEdit';
-import Result from './session';
+import Session from './session';
 import Join from './join';
 import Play from './play';
+import Result from './sessionResult';
 
 function App() {
   
@@ -21,7 +22,8 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/game/:gameId' element={<Questions />} />
         <Route path='/game/:gameId/question/:questionId' element={<QuestionEdit />} />
-        <Route path='/session/:sessionId' element={<Result />} />
+        <Route path='/session/:sessionId' element={<Session />} />
+        <Route path='/session/:sessionId/result' element={<Result />} />
         <Route path='/session/join' element={<Join />} />
         <Route path='/session/play/:sessionId' element={<Play />} />
       </Routes>

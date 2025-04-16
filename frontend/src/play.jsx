@@ -48,10 +48,9 @@ function Play() {
     
     // get correct answers
     const getCorrectAnswer = async() => {
-        console.log("hello?????")
         const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/answer`, null, setError, "Failed to get correct answers");
         if (res) {
-            setCorrectAnswers(res.answerIds);
+            setCorrectAnswers(res.answers);
         }
     }
 
@@ -97,16 +96,18 @@ function Play() {
         console.log(answers)
         // send answer
         const body = {
-            "answerIds": answers
+            "answers": answers
         }
-        console.log(body);
-        const res = await apiCall('PUT', `http://localhost:5005/play/${playerId}/answer`, body, setError, "Failed to send answer");
-        console.log(res)
+        const res = await apiCall('PUT', `http://localhost:5005/play/${playerId}/answer`, body, setError, "Failed to send answer", false);
+        if (!res) {
+            console.log("?")
+        }
+        console.log("in")
+        console.log("Res", res)
         if (res) {
             console.log("send!")
         }
     }
-    console.log(correctAnswers);
 
     // session not start
     if (!status) return <p>Please wait...</p>;

@@ -1,26 +1,44 @@
 import React, { useEffect, useState } from 'react';
 
-export async function apiCall(method, url, data=null, setError, errorMsg) {
+export async function apiCall(method, url, data=null, setError, errorMsg, auth=true) {
     const token = localStorage.getItem('token');
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+    if (auth && token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    };
+    
     const body = {
         method,
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token ? `Bearer ${token}` : undefined,
-        },
+        headers
     };
+
     if (data) {
         body.body = JSON.stringify(data);
     }
-    const res = await fetch(url, body);
-    if (!res.ok) {
-        const error = await res.json();
-        setError(error.error || errorMsg);
-        return;
+    try {
+        const res = await fetch(url, body);
+        if (!res.ok) {
+            let errorText = await res.text();
+            try {
+                const error = JSON.parse(errorText);
+                setError?.(error.error || errorMsg);
+            } catch {
+                setError?.(errorMsg || "Unknown error");
+            }
+            return null;
+        }
+        const text = await res.text();
+        const returnData = text ? JSON.parse(text) : {};
+        return returnData;
+    } catch (err) {
+        console.error("apiCall failed:", err);
+        setError?.(errorMsg || err.message);
+        return null;
     }
-    const returnData = await res.json();
-    return returnData;
 }
+
 export function fileToDataUrl(file) {
     const validFileTypes = [ 'image/jpeg', 'image/jpg' ]
     const valid = validFileTypes.find(type => type === file.type);

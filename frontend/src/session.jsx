@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiCall } from './helper';
 
-function Result() {
+function Session() {
     const [error, setError] = useState('');
     const { sessionId } = useParams();
     const gameId = localStorage.getItem(`session:${sessionId}`);
     const [results, setResults] = useState(null);
     const [countdown, setCountdown] = useState("");
+    const navigate = useNavigate();
     let current = "";
 
     const checkSession = async(e) => {
@@ -70,6 +71,8 @@ function Result() {
         const body = {"mutationType": "END"};
         await apiCall('POST', `http://localhost:5005/admin/game/${gameId}/mutate`, body, setError, "End session failed")
         localStorage.removeItem(`session:${sessionId}`);
+        // navigate to session result
+        navigate(`/session/${sessionId}/result`)
         console.log("success stop session");
     }
 
@@ -102,7 +105,7 @@ function Result() {
     )
 }
 
-export default Result;
+export default Session;
 
 // 1. show current question
 // 2. have an advance button allowing user to next question / have an stop session button to get result

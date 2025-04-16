@@ -46,10 +46,12 @@ function Navbar() {
                 <li><Link to="/register" className="text-white no-underline hover:underline">Register</Link></li>
               </>
             )}
-            <li><Link to="/dashboard" className="text-white no-underline hover:underline">Dashboard</Link></li>
             <li><Link to="/session/join" className="text-white no-underline hover:underline">Join Game</Link></li>
             {isLoggedIn && (
-              <li onClick={handleLogout} className="text-white cursor-pointer hover:underline">Logout</li>
+              <>
+                <li><Link to="/dashboard" className="text-white no-underline hover:underline">Dashboard</Link></li>
+                <li onClick={handleLogout} className="text-white cursor-pointer hover:underline">Logout</li>
+              </>
             )}
           </ul>
         </nav>
