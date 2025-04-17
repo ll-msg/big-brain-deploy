@@ -1,5 +1,4 @@
-import { useNavigate, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Login from './login';
 import Register from './register'
 import Navbar from './navbar';
@@ -10,6 +9,7 @@ import Session from './session';
 import Join from './join';
 import Play from './play';
 import Result from './sessionResult';
+import PlayerResult from './playResult';
 
 function App() {
   
@@ -26,6 +26,7 @@ function App() {
         <Route path='/session/:sessionId/result' element={<Result />} />
         <Route path='/session/join' element={<Join />} />
         <Route path='/session/play/:sessionId' element={<Play />} />
+        <Route path='session/play/:playerId/result' element={<PlayerResult />} />
       </Routes>
     </>
   )
