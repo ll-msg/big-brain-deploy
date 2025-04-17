@@ -28,17 +28,29 @@ function PlayerResult() {
   const totalCorrect = result.filter(r => r.correct).length;
   
   return (
-    <div className="player-result">
-      {error && <p className="error-message">{error}</p>}
-      <h2>Performance Summary</h2>
-      <p>You got {totalCorrect} / {result.length} questions correct.</p>
-      <ul className="mt-4 space-y-2">
-        {result.map((p, idx) => (
-          <li key={idx}>
-            Question {p.question}: {p.correct ? 'Correct' : 'Wrong'}, took you {p.timeTaken}s
-          </li>
-        ))}
-      </ul>
+    <div className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-start px-4 py-10">
+      
+      {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+      
+      <div className="bg-neutral-800 rounded-xl shadow-lg w-full max-w-2xl p-8 space-y-6">
+        <h2 className="text-2xl font-bold text-center">Performance Summary</h2>
+        <p className="text-center text-lg">You got {totalCorrect} / {result.length} questions correct.</p>
+        <ul className="space-y-3">
+          {result.map((p, i) => (
+            <li key={i}>
+              
+              <p className="font-semibold">
+                Question {p.question}{' '}
+                <span className={p.correct ? 'text-green-400' : 'text-red-400'}>
+                  {p.correct ? 'Correct' : 'Wrong'}
+                </span>
+              </p>
+
+              <p className="text-sm text-gray-300 mt-1">Response Time: {p.timeTaken}s</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
