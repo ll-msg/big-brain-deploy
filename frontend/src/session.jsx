@@ -78,28 +78,36 @@ function Session() {
 
 
   return (
-    <div className="session-container">
-      {error && <p className="error-message">{error}</p>}
+    <div className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-start px-6 py-10 space-y-6">
+      
+      {error && <p className="text-red-400 text-sm">{error}</p>}
+      
       {results.position === -1 ? (
-        <>
-          <p>The game has not started yet.</p>
-          <button onClick={advanceQuestion}>Advance</button>
-          <br />
-          <button onClick={stopSession}>Stop Session</button>
-        </>
+        <div className="bg-neutral-800 rounded-xl p-6 shadow-lg w-full max-w-lg space-y-4 text-center">
+          <p className="text-xl font-semibold">The game has not started yet.</p>
+          <div className="flex justify-center gap-4 mt-4">
+            <button onClick={advanceQuestion} className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded text-white font-semibold transition">Advance</button>
+            <button onClick={stopSession} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded text-white font-semibold transition">Stop Session</button>
+          </div>
+        </div>
       ) : (
-        <>
-          <h3>Question {results.position + 1}</h3>
-          <p>{current.question}</p>
-          <ul>
+        <div className="bg-neutral-800 rounded-xl p-6 shadow-lg w-full max-w-xl space-y-6">
+          <h3 className="text-2xl font-bold text-center">Question {results.position + 1}</h3>
+          <p className="text-lg text-center">{current.question}</p>
+          
+          <ul className="space-y-2">
             {current.answers.map((a, i) => (
-              <li key={i}>{a.text}</li>
+              <li key={i} className="bg-neutral-700 p-3 rounded text-white text-sm border border-neutral-600">{a.text}</li>
             ))}
           </ul>
-          {countdown !== null && (<p>Time left: {countdown} seconds</p>)}
-          <button onClick={advanceQuestion}>Next Question</button>
-          <button onClick={stopSession}>Stop Session</button>
-        </>
+
+          {countdown !== null && (<p className="text-center text-yellow-400 font-mono text-lg">Time left: {countdown} seconds</p>)}
+          
+          <div className="flex justify-center gap-4 pt-4">
+            <button onClick={advanceQuestion} className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded text-white font-semibold transition">Next Question</button>
+            <button onClick={stopSession} className="px-4 py-2 bg-red-500 hover:bg-red-600 rounded text-white font-semibold transition">Stop Session</button>
+          </div>
+        </div>
       )}
     </div>
   )
