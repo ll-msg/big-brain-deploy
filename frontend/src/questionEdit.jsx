@@ -31,7 +31,7 @@ function QuestionEdit() {
   return (
     <div className="edit-question">
       {error && <p className="error-message">{error}</p>}
-      <QuestionForm mode="edit" questionId={questionId} gameId={gameId} onSubmit={updateQuestion}/>
+      <QuestionForm mode="edit" questionId={questionId} gameId={gameId} onSubmit={updateQuestion} close={() => navigate(-1)}/>
     </div>
   )
     

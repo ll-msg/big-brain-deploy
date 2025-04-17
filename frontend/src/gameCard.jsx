@@ -1,12 +1,11 @@
 import defaultImage from './assets/default-image.jpg';
 
-function GameCard ({ game, goToQuestions, deleteGame, stopGame, startGame, navigate }) {
+function GameCard ({ game, goToQuestions, deleteGame, stopGame, startGame, editGame, navigate }) {
 
   const questionNum = game.questions?.length || 0;
   const thumbnail = game.thumbnail || defaultImage;
   const totalDuration = game.questions?.reduce((acc, q) => acc + (q.duration || 0), 0) || 0;
   const sessionId = localStorage.getItem(`game:${game.id}:sessionId`);
-  console.log(sessionId)
 
   return (
     <div className="bg-neutral-900 text-white p-6 rounded-xl shadow-lg max-w-md w-full mx-auto mb-6 space-y-3 transition hover:scale-[1.02] hover:shadow-xl duration-200">
@@ -20,7 +19,7 @@ function GameCard ({ game, goToQuestions, deleteGame, stopGame, startGame, navig
       <img src={thumbnail} alt="thumbnail" className="rounded-lg w-full h-40 object-cover border border-gray-700" />
       <p className="text-sm text-gray-400">Total Duration: {totalDuration}</p>
       <div className="flex flex-wrap gap-3 pt-2">
-        <button className="px-4 py-1 rounded bg-blue-500  hover:bg-blue-600 text-black text-sm">Edit</button>
+        <button onClick={() => editGame(game)} className="px-4 py-1 rounded bg-blue-500  hover:bg-blue-600 text-black text-sm">Edit</button>
         <button onClick={() => deleteGame(game.id)} className="px-4 py-1 rounded bg-red-600 hover:bg-red-700 text-sm">Delete</button>
         {game.active ? (
           <button onClick={() => stopGame(game.id)} className="px-4 py-1 rounded bg-yellow-500 hover:bg-yellow-600 text-black text-sm">Stop Game</button>

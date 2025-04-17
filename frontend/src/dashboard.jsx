@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CreateGameModal from './gameModal';
 import Modal from './sessionModal';
 import GameCard from './gameCard';
+import EditGameModal from './gameEdit';
 
 function Dashboard() {
   const [game, setGame] = useState('');
@@ -12,6 +13,9 @@ function Dashboard() {
   const navigate = useNavigate();
   const [sessionId, setSessionId] = useState("");
   const [isModalopen, setModalopen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
+
 
 
   // retrieve games
@@ -55,6 +59,27 @@ function Dashboard() {
     console.log('delete success');
   }
 
+  // edit a game
+  const editGame = (game) => {
+    setSelectedGame(game);
+    setEditModalOpen(true);
+  }
+
+  const updateGame = async (updatedGame) => {
+    const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, "Failed to get games");
+    const updatedGames = data.games.map((g) => {
+      console.log(g.id === updatedGame.id)
+      console.log(updatedGame.id)
+      return Number(g.id) === Number(updatedGame.id) ? updatedGame : g
+    });
+    console.log(updatedGames)
+    const res = await apiCall('PUT', 'http://localhost:5005/admin/games', { games: updatedGames }, setError, "Failed to update game");
+    if (res) {
+      setGame({ ...data, games: updatedGames });
+      console.log('Game updated successfully');
+    }
+  };
+
     
   // show all the games
   const renderGameList = () => {
@@ -69,6 +94,7 @@ function Dashboard() {
         deleteGame={deleteGame}
         startGame={startGame}
         stopGame={stopGame}
+        editGame={editGame}
         navigate={navigate}
       />
     ));    
@@ -134,6 +160,13 @@ function Dashboard() {
           <button onClick={() => {navigator.clipboard.writeText(sessionId)}}>Copy Id</button>
           <button onClick={() => setModalopen(false)}>Close</button>
         </Modal>
+      )}
+      {editModalOpen && selectedGame && (
+        <EditGameModal
+          game={selectedGame}
+          close={() => setEditModalOpen(false)}
+          update={updateGame}
+        />
       )}
     </div>
   );
