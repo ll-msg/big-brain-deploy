@@ -11,7 +11,22 @@ function Result() {
   const [correctData, setCorrectData] = useState([]);
   const [avgTimeData, setAvgTimeData] = useState([]);
 
-
+  // find current game for getting question points
+  // TODO: might change based on spec?
+  const findGameIdBySessionId = (sessionId) => {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith('game:') && key.endsWith(':sessionId')) {
+        const storedSessionId = localStorage.getItem(key);
+        if (storedSessionId === sessionId) {
+          const gameId = key.split(':')[1];
+          return Number(gameId);
+        }
+      }
+    }
+    return null;
+  };
+  
   const getSessionResult = async() => {
     // get result of current session
     const res = await apiCall('GET', `http://localhost:5005/admin/session/${sessionId}/results`, null, setError, "Retrieve session result failed");
@@ -22,9 +37,11 @@ function Result() {
 
   // get question points
   const getPoints = async() => {
+    const gameId = findGameIdBySessionId(sessionId);
     // get all question points
     const res = await apiCall('GET', `http://localhost:5005/admin/games`, null, setError, "Retrieve session result failed");
-    const questionPoints = res.games[0]?.questions.map(q => q.points) || [];
+    const game = res.games.find(g => g.id === gameId);
+    const questionPoints = game?.questions?.map(q => q.points) || [];
     return questionPoints;
   }
 
@@ -32,8 +49,12 @@ function Result() {
   const calculateScore = async(result, points) => {
     const playerScores = result.map(player => {
       const score = player.answers.reduce((total, a, i) => {
+        console.log(points)
+        console.log(points[i])
+        console.log(total + (a.correct ? (points[i] || 0) : 0))
         return total + (a.correct ? (points[i] || 0) : 0);
       }, 0);
+      console.log(score)
       return {
         name: player.name,
         score: score
@@ -114,61 +135,66 @@ function Result() {
 
 
   return (
-    <div className="result-container">
-      {error && <p className="error-message">{error}</p>}
+    <div className="min-h-screen bg-neutral-900 text-white px-4 py-10">
+      {error && <p className="text-red-400 text-sm text-center mb-4">{error}</p>}
 
-      <div className="relative overflow-x-auto">
-        <table className="w-2/3 mx-auto my-30 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="px-6 py-3"> Player </th>
-              <th scope="col" className="px-6 py-3"> Score </th>
-            </tr>
-          </thead>
-          <tbody>
-            {sessionResult.map((r, i) => {
-              const found = scores.find(s => s.name === r.name);
-              const playerScore = found ? found.score : '...';                        
-              return (
-                <tr key={i} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                  <td className="px-6 py-4">
-                    {r.name}
-                  </td>
-                  <td className="px-6 py-4">
-                    {playerScore}
-                  </td>
+      <div className="max-w-4xl mx-auto space-y-12">
+
+        <div className="bg-neutral-800 rounded-xl shadow-md p-6">
+          <h2 className="text-2xl font-semibold text-center mb-4"> Player Scores</h2>
+          <div className="overflow-x-auto rounded">
+            <table className="w-full text-sm text-left text-gray-300">
+              <thead className="text-xs uppercase bg-neutral-700 text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3"> Player </th>
+                  <th scope="col" className="px-6 py-3"> Score </th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        <br></br>
-        <br></br>
-        <div className="w-2/3 mx-auto h-150 my-30">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={correctData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="question" />
-              <YAxis domain={[0, 100]} tickFormatter={v => `${v}%`} />
-              <Tooltip />
-              <Bar dataKey="percentage" fill="#008000" />
-            </BarChart>
-          </ResponsiveContainer>
-          <h2 className="text-lg font-semibold mb-2 text-center">Correctness Rate per Question</h2>
+              </thead>
+              <tbody>
+                {sessionResult.map((r, i) => {
+                  const found = scores.find(s => s.name === r.name);
+                  const playerScore = found ? found.score : '...';                        
+                  return (
+                    <tr key={i} className="bg-neutral-900 border-b border-neutral-700 hover:bg-neutral-800 transition">
+                      <td className="px-6 py-4">{r.name}</td>
+                      <td className="px-6 py-4">{playerScore}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
-                    
-        <div className="w-2/3 mx-auto h-150 my-30">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={avgTimeData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="question" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="time" stroke="#008000" />
-            </LineChart>
-          </ResponsiveContainer>
-          <h2 className="text-lg font-semibold mb-2 text-center">Average Answer Time per Question</h2>
+        
+
+        <div className="bg-neutral-800 rounded-xl shadow-md p-6">
+          <div className="w-full h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={correctData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="question" />
+                <YAxis domain={[0, 100]} tickFormatter={v => `${v}%`} />
+                <Tooltip />
+                <Bar dataKey="percentage" fill="#008000" />
+              </BarChart>
+            </ResponsiveContainer>
+            <h2 className="text-lg font-semibold mb-2 text-center">Correctness Rate per Question</h2>
+          </div>
+        </div>
+
+        <div className="bg-neutral-800 rounded-xl shadow-md p-6">             
+          <div className="w-full h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={avgTimeData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="question" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="time" stroke="#008000" />
+              </LineChart>
+            </ResponsiveContainer>
+            <h2 className="text-lg font-semibold mb-2 text-center">Average Answer Time per Question</h2>
+          </div>
         </div>
 
       </div>
