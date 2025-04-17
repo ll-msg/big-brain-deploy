@@ -103,8 +103,10 @@ function Dashboard() {
     }));
     const confirm = window.confirm("Would you like to view the results?");
     if (confirm) {
+      const sid = localStorage.getItem(`game:${gameId}:sessionId`);
+      localStorage.removeItem(`game:${gameId}:sessionId`);
       console.log("stop success");
-      navigate(`/session/${sessionId}`);
+      navigate(`/session/${sid}`);
     }
   }
 
@@ -114,12 +116,12 @@ function Dashboard() {
   }, [])
 
   return (
-    <div className='game-container'>
+    <div className="game-container flex flex-col items-center px-4 py-8 space-y-8">
       {error && <p className="error-message">{error}</p>}
-      <div className="game-list">
+      <div className="game-list flex flex-wrap justify-center gap-6">
         {renderGameList()}
       </div>
-      <button className="submit-game" type="submit" onClick={() => setShowModal(true)}>Create a new game</button>
+      <button type="submit" onClick={() => setShowModal(true)} className="ml-10 mt-6 px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-200">Create a new game</button>
       {showModal && (
         <CreateGameModal
           close={() => setShowModal(false)}
