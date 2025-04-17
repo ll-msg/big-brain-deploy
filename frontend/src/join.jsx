@@ -21,13 +21,18 @@ function Join() {
   }
 
   return (
-    <div className="join-container">
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={joinGame} className="join-form">
-        <input type="text" value={username} placeholder='Enter your name' onChange={(e) => setUsername(e.target.value)} />
-        <input type="text" value={sessionId} placeholder='Enter your session id' onChange={(e) => setSessionId(e.target.value)} />
-        <button type="submit">Join</button>
-      </form>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white px-4">
+      <div className="bg-neutral-800 p-8 rounded-xl shadow-md w-full max-w-sm space-y-6">
+        {error && <p className="text-red-400 text-sm text-center">{error}</p>}
+
+        <h2 className="text-2xl font-bold text-center">Join Game</h2>
+        
+        <form onSubmit={joinGame} className="space-y-4">
+          <input type="text" value={username} placeholder='Enter your name' onChange={(e) => setUsername(e.target.value)} className="w-full px-4 py-2 rounded border border-gray-300 text-white" required/>
+          <input type="text" value={sessionId} placeholder='Enter your session id' onChange={(e) => setSessionId(e.target.value)} className="w-full px-4 py-2 rounded border border-gray-300 text-white" required/>
+          <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded transition">Join</button>
+        </form>
+      </div>
     </div>
   )
 }
