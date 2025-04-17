@@ -45,12 +45,9 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
     loadOriginal();
   }, [mode, gameId. questionId]);
   
-  const generateQuestionId = (curQuestions) => {
-    console.log(curQuestions)
-    const ids = curQuestions.map(q => Number(q.id));
-    const max_id = ids > 0 ? Math.max(...ids) : 0;
-    return (max_id + 1).toString();
-  }
+  const generateQuestionId = () => {
+    return (Date.now() + Math.floor(Math.random() * 1000)).toString();
+  }  
 
   const handleImg = async(e) => {
       const img = e.target.files[0];
@@ -77,53 +74,77 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
   };
         
   return (
-    <form onSubmit={handleSubmit} className="question-form">
-      {error && <p className="error-message">{error}</p>}
-      <input type="text" value={question} placeholder='Enter question' onChange={(e) => setQuestion(e.target.value)} />
-      <select id="question-type" value={type} onChange={(e) => setType(e.target.value)}>
-        <option value="single choice">Single Choice</option>
-        <option value="multiple choice">Multiple Choice</option>
-        <option value="judgement">Judgement</option>
-      </select>
-      <input type="number" value={limit} placeholder='Specify time limit' onChange={(e) => setLimit(e.target.value)} />
-      <input type="number" value={points} placeholder='Points' onChange={(e) => setPoints(e.target.value)} />
-      <label>Attach YouTube Video URL (optional):</label>
-      <input type="text" value={mediaUrl} placeholder="https://www.youtube.com/..." onChange={(e) => setMediaUrl(e.target.value)} />
-      <input type="file" accept="image/*" onChange={handleImg} />
-      <div className='answers-input'>
-        {answer.map((a, i) => (
-          <div key={i} className="answer-input">
-            <input type="text" value={a.text} placeholder={`Answer ${i + 1}`} onChange={(e) => {
-              const updatedAnswer = [...answer];
-              updatedAnswer[i].text = e.target.value;
-              setAnswer(updatedAnswer);
-            }} required />
-            <input type="checkbox" checked={a.correct}
-              onChange={() => {
-                if (type === 'single choice' || type === 'judgement') {
-                  const updatedAnswer = answer.map((ans, index) => ({
-                    ...ans,
-                    correct: index === i
-                  }));
-                  setAnswer(updatedAnswer);
-                } else {
-                  const updatedAnswer = [...answer];
-                  updatedAnswer[i].correct = !updatedAnswer[i].correct;
-                  setAnswer(updatedAnswer);
-                }
-              }}
-              disabled={type === 'judgement'}/>
-            <button type="button" onClick={() => { if (answer.length > 2) { setAnswer(answer.filter((_, index) => index !== i));}}}>
-                              Delete Answer
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={() => { if (answer.length < 6) { setAnswer([...answer, { text: '', correct: false }]);}}}>
-                      Add Possible Answer
-        </button>
-      </div>
-      <button type="submit">Create</button>
-      <button onClick={close}>Cancel</button>
-    </form>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <form onSubmit={handleSubmit} className="bg-white text-black rounded-xl shadow-lg w-full max-w-2xl p-6 space-y-5">
+        
+        {error && <p className="error-message">{error}</p>}
+        
+        <div className="flex justify-between items-center">
+          <h4 className="text-xl font-semibold">Create a new question</h4>
+          <button onClick={close} type="button" className="text-gray-500 hover:text-black text-xl">&times;</button>
+        </div>
+        
+        <input type="text" value={question} placeholder='Enter question' onChange={(e) => setQuestion(e.target.value)} className="w-full border border-gray-300 rounded px-4 py-2" required/>
+        
+        <select id="question-type" value={type} onChange={(e) => setType(e.target.value)} className="w-full border border-gray-300 rounded px-4 py-2" required>
+          <option value="single choice">Single Choice</option>
+          <option value="multiple choice">Multiple Choice</option>
+          <option value="judgement">Judgement</option>
+        </select>
+        
+        <div className="flex gap-4">
+          <input type="number" value={limit} placeholder='Specify time limit' onChange={(e) => setLimit(e.target.value)} className="w-full border border-gray-300 rounded px-4 py-2" required/>
+          <input type="number" value={points} placeholder='Points' onChange={(e) => setPoints(e.target.value)} className="w-full border border-gray-300 rounded px-4 py-2" required/>
+        </div>
+        
+        <label>Attach YouTube Video URL (optional):</label>
+        <input type="text" value={mediaUrl} placeholder="https://www.youtube.com/..." onChange={(e) => setMediaUrl(e.target.value)} className="w-full border border-gray-300 rounded px-4 py-2"/>
+        
+        <label>Attach Question Image (optional): </label>
+        <input type="file" accept="image/*" onChange={handleImg} />
+        
+        <div className="space-y-4">
+          {answer.map((a, i) => (
+            <div key={i} className="flex items-center gap-3">
+
+              <input type="text" value={a.text} placeholder={`Answer ${i + 1}`} onChange={(e) => {
+                const updatedAnswer = [...answer];
+                updatedAnswer[i].text = e.target.value;
+                setAnswer(updatedAnswer);
+              }} className="w-100 border border-gray-300 rounded px-3 py-1" required />
+              
+              <input type="checkbox" checked={a.correct}
+                onChange={() => {
+                  if (type === 'single choice' || type === 'judgement') {
+                    const updatedAnswer = answer.map((ans, index) => ({
+                      ...ans,
+                      correct: index === i
+                    }));
+                    setAnswer(updatedAnswer);
+                  } else {
+                    const updatedAnswer = [...answer];
+                    updatedAnswer[i].correct = !updatedAnswer[i].correct;
+                    setAnswer(updatedAnswer);
+                  }
+                }}
+                disabled={type === 'judgement'}/>
+                
+              <button type="button" onClick={() => { if (answer.length > 2) { setAnswer(answer.filter((_, index) => index !== i));}}} className="text-red-500 hover:underline text-sm">
+                                Delete Answer
+              </button>
+            </div>
+          ))}
+
+          <button type="button" onClick={() => { if (answer.length < 6) { setAnswer([...answer, { text: '', correct: false }]);}}} className="text-blue-600 hover:underline text-sm">
+                        Add Possible Answer
+          </button>
+        </div>
+
+        <div className="flex justify-start gap-4 pt-4">
+          <button type="submit" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Create</button>
+          <button onClick={close} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
+        </div>
+      </form>
+    </div>
   )
 }
