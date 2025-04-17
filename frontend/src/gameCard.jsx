@@ -1,11 +1,13 @@
 import './gamecard.css'
 import defaultImage from './assets/default-image.jpg';
 
-function GameCard ({ game, goToQuestions, deleteGame, stopGame, startGame, sessionId, navigate }) {
+function GameCard ({ game, goToQuestions, deleteGame, stopGame, startGame, navigate }) {
 
   const questionNum = game.questions?.length || 0;
   const thumbnail = game.thumbnail || defaultImage;
   const totalDuration = game.questions?.reduce((acc, q) => acc + (q.duration || 0), 0) || 0;
+  const sessionId = localStorage.getItem(`game:${game.id}:sessionId`);
+  console.log(sessionId)
 
   return (
     <div className="game-card">

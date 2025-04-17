@@ -69,7 +69,6 @@ function Dashboard() {
         deleteGame={deleteGame}
         startGame={startGame}
         stopGame={stopGame}
-        sessionId={sessionId}
         navigate={navigate}
       />
     ));    
@@ -91,6 +90,7 @@ function Dashboard() {
       games: prev.games.map(g => g.id === gameId ? { ...g, active:true } : g)
     }));
     localStorage.setItem(`session:${data.data.sessionId}`, gameId)
+    localStorage.setItem(`game:${gameId}:sessionId`, data.data.sessionId);
   }
 
   // stop a game session
