@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCall } from './helper';
+import { apiCall, convertYouTubeUrl } from './helper';
 
 function Play() {
   const playerId = localStorage.getItem('playerId');
@@ -143,8 +143,23 @@ function Play() {
       {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
       
       <div className="bg-neutral-800 rounded-xl shadow-lg p-8 w-full max-w-2xl space-y-6">
+        
         <h2 className="text-2xl font-bold text-center">Question: {curquestion.question}</h2>
+        
+        {curquestion.mediaUrl && (
+          <div className="mt-4 rounded overflow-hidden">
+            <iframe src={convertYouTubeUrl(curquestion.mediaUrl)} className="w-full h-64 rounded" allowFullScreen title="Question Video"/>
+          </div>
+        )}
+
+        {curquestion.mediaImage && (
+          <div className="mt-4">
+            <img src={curquestion.mediaImage} alt="Question visual" className="max-w-full max-h-64 object-contain mx-auto rounded"/>
+          </div>
+        )}
+        
         {countdown !== null && (<p className="text-center text-yellow-400 font-mono text-lg">Time left: {countdown} seconds</p>)}
+        
         <ul className="space-y-3">
           {curquestion.answers.map((a, i) => (
             <li
@@ -158,6 +173,7 @@ function Play() {
             </li>
           ))}
         </ul>
+        
         {showAnswer && lastQuestion && correctAnswers.length > 0 && (
           <div className="pt-4 border-t border-gray-600">
             <p className="font-bold text-lg mb-2">Correct Answers: </p>

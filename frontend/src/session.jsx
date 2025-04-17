@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { apiCall } from './helper';
+import { apiCall, convertYouTubeUrl } from './helper';
 
 function Session() {
   const [error, setError] = useState('');
@@ -93,6 +93,19 @@ function Session() {
       ) : (
         <div className="bg-neutral-800 rounded-xl p-6 shadow-lg w-full max-w-xl space-y-6">
           <h3 className="text-2xl font-bold text-center">Question {results.position + 1}</h3>
+
+          {current.mediaUrl && (
+            <div className="mt-4 rounded overflow-hidden">
+              <iframe src={convertYouTubeUrl(current.mediaUrl)} className="w-full h-64 rounded" allowFullScreen title="Question Video"/>
+            </div>
+          )}
+
+          {current.mediaImage && (
+            <div className="mt-2">
+              <img src={current.mediaImage} alt={`Image for question ${current.id}`} className="rounded max-w-full max-h-64 object-contain"/>
+            </div>
+          )}
+          
           <p className="text-lg text-center">{current.question}</p>
           
           <ul className="space-y-2">
