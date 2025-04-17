@@ -26,17 +26,20 @@ function CreateGameModal({ close, create }) {
   }
 
   return (
-    <div className="modal-container">
-      <div className="modal-header">
-        <h4 className="modal-title">Create a new game</h4>
-      </div>
-      <div className="modal-body">
-        <input type="text" value={name} placeholder='Enter game name' onChange={(e) => setName(e.target.value)} />
-        <input type="file" accept="image/*" onChange={handleThumbNail} />
-      </div>
-      <div className="modal-button">
-        <button onClick={handleSubmit}>Create</button>
-        <button onClick={close}>Cancel</button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white text-black rounded-xl shadow-lg w-full max-w-md p-6 space-y-4">
+        <div className="flex justify-between items-center mb-2">
+          <h4 className="text-xl font-semibold">Create a new game</h4>
+          <button onClick={close} className="text-gray-500 hover:text-black text-lg">&times;</button>
+        </div>
+        <div className="space-y-4">
+          <input type="text" value={name} placeholder='Enter game name' onChange={(e) => setName(e.target.value)} />
+          <input type="file" accept="image/*" onChange={handleThumbNail} />
+        </div>
+        <div className="flex justify-end gap-4 pt-4">
+          <button onClick={handleSubmit} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Create</button>
+          <button onClick={close} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
+        </div>
       </div>
     </div>
   );

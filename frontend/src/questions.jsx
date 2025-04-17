@@ -45,7 +45,8 @@ function Questions() {
     if (!res) return;
     console.log("create success!")
     // live update
-    setQuestions(prev => [...prev, newQuestion])
+    //setQuestions(prev => [...prev, newQuestion])
+    await loadQuestions();
     setShowModal(false);
   };
 
@@ -76,39 +77,43 @@ function Questions() {
 
 
   return (
-    <div className='question-list'>
+    <div className="question-list flex flex-col items-center px-4 py-8 space-y-8">
       {error && <p className="error-message">{error}</p>}
       
-      {loading ? (
-        <p>Loading questions now... Please wait for a moment</p>
-      ) : questions.length === 0 ? (
-        <p>No questions yet. Click below to create one!</p>
-      ) : (
-        questions.map((q, i) => (
-          <div key={q.id || i} className="bg-white p-6 rounded-xl shadow-md max-w-3xl mb-6 space-y-2">
-            <p>{q.type}</p>
-            <p><strong>Q{q.id}:</strong> {q.question}</p>
-            {q.mediaUrl && (
-              <div className="media-section">
-                <iframe src={convertYouTubeUrl(q.mediaUrl)} allowFullScreen title={`Video for question ${q.id}`} />
+      <div className="flex flex-wrap justify-center gap-6 max-w-screen-xl">
+        {loading ? (
+          <p>Loading questions now... Please wait for a moment</p>
+        ) : questions.length === 0 ? (
+          <p>No questions yet. Click below to create one!</p>
+        ) : (
+          questions.map((q, i) => (
+            <div key={i} className="w-100 mt-10 ml-10 bg-black text-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.01] transition duration-200 space-y-3">
+              <p className="text-sm text-gray-400 uppercase">{q.type}</p>
+              <p className="text-lg font-semibold"><strong>Q{i + 1}:</strong> {q.question}</p>
+              {q.mediaUrl && (
+                <div className="rounded overflow-hidden mt-2">
+                  <iframe src={convertYouTubeUrl(q.mediaUrl)} className="w-full h-64 rounded" allowFullScreen title={`Video for question ${q.id}`} />
+                </div>
+              )}
+              {q.mediaImage && (
+                <div className="mt-2">
+                  <img src={q.mediaImage} alt={`Image for question ${q.id}`} className="rounded max-w-full max-h-64 object-contain"/>
+                </div>
+              )}
+              <p className="text-sm text-gray-300">Duration: {q.duration}</p>
+              <p className="text-sm text-gray-300">Points: {q.points}</p>
+              <div className="flex gap-4 pt-2">
+                <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)} className="px-4 py-1 text-sm rounded bg-blue-500 hover:bg-blue-600">Edit</button>
+                <button onClick={() => deleteQuestion(q.id)} className="px-4 py-1 text-sm rounded bg-red-600 hover:bg-red-700">Delete</button>
               </div>
-            )}
-            {q.mediaImage && (
-              <div className="media-section">
-                <img src={q.mediaImage} alt={`Image for question ${q.id}`} style={{ maxWidth: '300px', maxHeight: '200px', marginTop: '5px' }}/>
-              </div>
-            )}
-            <p>Duration: {q.duration}</p>
-            <p>Points: {q.points}</p>
-            <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>
-            <button onClick={() => deleteQuestion(q.id)}>Delete</button>
-          </div>
-        ))
-      )}
+            </div>
+          ))
+        )}
+      </div>
 
       {!loading && (
         <>
-          <button className="submit-question" type="submit" onClick={() => setShowModal(true)}>
+          <button type="submit" onClick={() => setShowModal(true)} className="ml-10 mt-6 px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-200">
               Create a new question
           </button>
           {showModal && (
