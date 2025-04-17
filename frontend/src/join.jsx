@@ -1,16 +1,26 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { apiCall } from './helper';
+
+// the url should look like: http://localhost:3000/join?sessionId=***
+// get session id passed by the admin
+const useQuery = () => new URLSearchParams(useLocation().search);
 
 function Join() {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [sessionId, setSessionId] = useState('');
   const navigate = useNavigate();
+  const query = useQuery();
 
 
   const joinGame = async(e) => {
     e.preventDefault();
+    if (!username || !sessionId) {
+      setError("Please enter your name and session ID");
+      return;
+    }
+    
     const body = {
       name: username
     };
@@ -19,6 +29,14 @@ function Join() {
     localStorage.setItem('playerId', res.playerId);
     navigate(`/session/play/${sessionId}`);
   }
+
+  useEffect(() => {
+    const fromUrl = query.get('sessionId');
+    if (fromUrl) {
+      setSessionId(fromUrl);
+    }
+  }, []);
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-900 text-white px-4">
