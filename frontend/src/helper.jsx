@@ -22,11 +22,10 @@ export async function apiCall(method, url, data=null, setError, errorMsg, auth=t
       try {
         const error = JSON.parse(errorText);
         setError?.(error.error || errorMsg);
-        console.log(error)
+        //console.log(error)
       } catch {
         setError?.(errorMsg || "Unknown error");
       }
-      console.log(res)
       return null;
     }
     const text = await res.text();
