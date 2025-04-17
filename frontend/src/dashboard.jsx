@@ -143,24 +143,38 @@ function Dashboard() {
 
   return (
     <div className="game-container flex flex-col items-center px-4 py-8 space-y-8">
+
       {error && <p className="error-message">{error}</p>}
+
       <div className="game-list flex flex-wrap justify-center gap-6">
         {renderGameList()}
       </div>
+
       <button type="submit" onClick={() => setShowModal(true)} className="ml-10 mt-6 px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-md transition duration-200">Create a new game</button>
+      
       {showModal && (
         <CreateGameModal
           close={() => setShowModal(false)}
           create={createGame}  
         />
       )}
+
       {isModalopen && (
         <Modal onClose={() => setModalopen(false)}>
-          <p>Game started! Session id: {sessionId}</p>
-          <button onClick={() => {navigator.clipboard.writeText(sessionId)}}>Copy Id</button>
-          <button onClick={() => setModalopen(false)}>Close</button>
+          <div className="bg-white text-black rounded-xl shadow-lg w-full max-w-md p-6 space-y-5">
+            <p className="text-2xl font-semibold text-center">Game started </p>
+            <div className="text-center space-y-2">
+              <p className="text-gray-700">Session ID:</p>
+              <p className="text-lg font-mono font-semibold bg-gray-100 px-4 py-2 rounded"> {sessionId} </p>
+            </div>
+            <div className="flex justify-center gap-4 pt-4">
+              <button onClick={() => {navigator.clipboard.writeText(sessionId)}} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Copy Id</button>
+              <button onClick={() => setModalopen(false)} className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition">Close</button>
+            </div>
+          </div>
         </Modal>
       )}
+
       {editModalOpen && selectedGame && (
         <EditGameModal
           game={selectedGame}
@@ -168,6 +182,7 @@ function Dashboard() {
           update={updateGame}
         />
       )}
+
     </div>
   );
 }
