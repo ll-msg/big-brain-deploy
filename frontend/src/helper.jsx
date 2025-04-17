@@ -57,3 +57,17 @@ export function fileToDataUrl(file) {
   return dataUrlPromise;
 }
 
+export function convertYouTubeUrl(url){
+  if (!url.includes('youtube.com') && !url.includes('youtu.be')) return url;
+
+  try {
+    const videoId = url.includes('youtu.be')
+      ? url.split('youtu.be/')[1]
+      : new URL(url).searchParams.get('v');
+    return `https://www.youtube.com/embed/${videoId}`;
+  } catch {
+    return url;
+  }
+};
+
+

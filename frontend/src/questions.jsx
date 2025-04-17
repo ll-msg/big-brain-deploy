@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { apiCall } from './helper';
+import { apiCall, convertYouTubeUrl } from './helper';
 import CreateQuestionModal from './questionModal';
 
 function Questions() {
@@ -85,9 +85,19 @@ function Questions() {
         <p>No questions yet. Click below to create one!</p>
       ) : (
         questions.map((q, i) => (
-          <div key={q.id || i} className="game-card">
+          <div key={q.id || i} className="bg-white p-6 rounded-xl shadow-md max-w-3xl mb-6 space-y-2">
             <p>{q.type}</p>
             <p><strong>Q{q.id}:</strong> {q.question}</p>
+            {q.mediaUrl && (
+              <div className="media-section">
+                <iframe src={convertYouTubeUrl(q.mediaUrl)} allowFullScreen title={`Video for question ${q.id}`} />
+              </div>
+            )}
+            {q.mediaImage && (
+              <div className="media-section">
+                <img src={q.mediaImage} alt={`Image for question ${q.id}`} style={{ maxWidth: '300px', maxHeight: '200px', marginTop: '5px' }}/>
+              </div>
+            )}
             <p>Duration: {q.duration}</p>
             <p>Points: {q.points}</p>
             <button onClick={() => navigate(`/game/${gameId}/question/${q.id}`)}>Edit</button>
