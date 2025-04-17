@@ -72,6 +72,16 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
     };
     onSubmit(newQuestion);
   };
+
+  // judgement question only have two answers true or false
+  useEffect(() => {
+    if (type === 'judgement') {
+      setAnswer([
+        { text: 'True' },
+        { text: 'False' }
+      ]);
+    }
+  }, [type]);
         
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -126,18 +136,17 @@ export default function QuestionForm({ mode, questionId, gameId, onSubmit, close
                     updatedAnswer[i].correct = !updatedAnswer[i].correct;
                     setAnswer(updatedAnswer);
                   }
-                }}
-                disabled={type === 'judgement'}/>
+                }}/>
                 
-              <button type="button" onClick={() => { if (answer.length > 2) { setAnswer(answer.filter((_, index) => index !== i));}}} className="text-red-500 hover:underline text-sm">
+              {type !== 'judgement' && (<button type="button" onClick={() => { if (answer.length > 2) { setAnswer(answer.filter((_, index) => index !== i));}}} className="text-red-500 hover:underline text-sm">
                                 Delete Answer
-              </button>
+              </button>)}
             </div>
           ))}
 
-          <button type="button" onClick={() => { if (answer.length < 6) { setAnswer([...answer, { text: '', correct: false }]);}}} className="text-blue-600 hover:underline text-sm">
+          {type !== 'judgement' && (<button type="button" onClick={() => { if (answer.length < 6) { setAnswer([...answer, { text: '', correct: false }]);}}} className="text-blue-600 hover:underline text-sm">
                         Add Possible Answer
-          </button>
+          </button>)}
         </div>
 
         <div className="flex justify-start gap-4 pt-4">
