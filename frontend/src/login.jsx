@@ -45,9 +45,9 @@ function Login() {
   }
 
   return (
-    <div className="flex flex-col w-[530px] bg-[#166229] mt-[200px] mx-auto pb-[30px]">
+    <div className="flex flex-col w-[530px] bg-black mt-[100px] mx-auto pb-[40px]">
       <div className="flex flex-col items-center gap-[9px] w-full mt-[30px]">
-        <div className="text-[#030303] text-[40px] font-bold">Login</div>
+        <div className="text-white text-[40px] font-bold">Login</div>
       </div>
       <form className="flex flex-col mt-[55px] gap-[25px]" onSubmit={handleLogin}>
         {error && <p className="text-red-600 text-center">{error}</p>}
@@ -73,12 +73,12 @@ function Login() {
             required
           />
         </div>
-        <div className="ml-[65px]">
+        <div className="ml-[65px] text-white">
               Have not got an account yet? <a href="/register" className="text-blue-600 underline">Register here</a>
         </div>
         <div className="flex gap-[30px] mx-auto mt-[60px]">
           <button
-            className="w-[170px] h-[50px] text-[aliceblue] bg-[#166229] rounded-[40px] font-bold text-[17px] font-[Trebuchet_MS] cursor-pointer"
+            className="w-[170px] h-[50px] text-black bg-white rounded-[40px] font-bold text-[17px] font-[Trebuchet_MS] cursor-pointer"
             type="submit"
           >
                 Login
