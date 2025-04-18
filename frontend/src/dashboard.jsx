@@ -165,11 +165,11 @@ function Dashboard() {
             <p className="text-2xl font-semibold text-center">Game started </p>
             <div className="text-center space-y-2">
               <p className="text-gray-700">Session ID:</p>
-              <p className="text-lg font-mono font-semibold bg-gray-100 px-4 py-2 rounded"> {sessionId} </p>
+              <p data-testid="session-id" className="text-lg font-mono font-semibold bg-gray-100 px-4 py-2 rounded"> {sessionId} </p>
             </div>
             <div className="flex justify-center gap-4 pt-4">
-              <button onClick={() => {navigator.clipboard.writeText(sessionId)}} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Copy Id</button>
-              <button onClick={() => setModalopen(false)} className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition">Close</button>
+              <button onClick={() => {navigator.clipboard.writeText(`/session/join?sessionId=${sessionId}`)}} data-testid="copy-button" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">Copy Id</button>
+              <button onClick={() => setModalopen(false)} data-testid="close-button" className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition">Close</button>
             </div>
           </div>
         </Modal>

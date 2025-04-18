@@ -9,6 +9,7 @@ function Questions() {
   const [questions, setQuestions] = useState([]);
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [game, setGame] = useState(null);
   const navigate = useNavigate();
 
   const loadQuestions = async() => {
@@ -22,7 +23,7 @@ function Questions() {
       setLoading(false);
       return;
     }
-    console.log(curGame);
+    setGame(curGame);
     setQuestions(curGame.questions || []);
     setLoading(false);
   }
@@ -121,6 +122,7 @@ function Questions() {
               close={() => setShowModal(false)}
               create={createQuestion}
               gameId={gameId}
+              game={game}
             />
           )}
         </>

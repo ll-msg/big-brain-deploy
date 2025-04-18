@@ -59,6 +59,7 @@ function Register() {
         <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
           <img src={userIcon} alt="username" className="w-[20px] h-[20px] ml-[10px]" />
           <input
+            name='name'
             type="text"
             placeholder="UserName"
             className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
@@ -71,6 +72,7 @@ function Register() {
         <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
           <img src={emailIcon} alt="email" className="w-[20px] h-[20px] ml-[10px]" />
           <input
+            name='email'
             type="email"
             placeholder="Email"
             className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
@@ -83,6 +85,7 @@ function Register() {
         <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
           <img src={passwordIcon} alt="password" className="w-[20px] h-[20px] ml-[10px]" />
           <input
+            name='password'
             type="password"
             placeholder="Password"
             className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
@@ -95,6 +98,7 @@ function Register() {
         <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
           <img src={passwordIcon} alt="confirm-password" className="w-[20px] h-[20px] ml-[10px]" />
           <input
+            name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
             className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"

@@ -33,6 +33,7 @@ function Navbar() {
       throw new Error('Logout failed');
     }
     localStorage.removeItem('token');
+    localStorage.removeItem('email');
     setIsLoggedIn(false);
     navigate('/login');
   }

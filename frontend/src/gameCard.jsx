@@ -8,7 +8,7 @@ function GameCard ({ game, goToQuestions, deleteGame, stopGame, startGame, editG
   const sessionId = localStorage.getItem(`game:${game.id}:sessionId`);
 
   return (
-    <div className="bg-neutral-900 text-white p-6 rounded-xl shadow-lg max-w-md w-full mx-auto mb-6 space-y-3 transition hover:scale-[1.02] hover:shadow-xl duration-200">
+    <div className="game-card bg-neutral-900 text-white p-6 rounded-xl shadow-lg max-w-md w-full mx-auto mb-6 space-y-3 transition hover:scale-[1.02] hover:shadow-xl duration-200">
       <h3 className="text-2xl font-semibold">{game.name}</h3>
       <p 
         className="text-sm text-gray-300 underline cursor-pointer hover:text-white transition"

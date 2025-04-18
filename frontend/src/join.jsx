@@ -48,7 +48,7 @@ function Join() {
         <form onSubmit={joinGame} className="space-y-4">
           <input type="text" value={username} placeholder='Enter your name' onChange={(e) => setUsername(e.target.value)} className="w-full px-4 py-2 rounded border border-gray-300 text-white" required/>
           <input type="text" value={sessionId} placeholder='Enter your session id' onChange={(e) => setSessionId(e.target.value)} className="w-full px-4 py-2 rounded border border-gray-300 text-white" required/>
-          <button type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded transition">Join</button>
+          <button name='join-game' type="submit" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded transition">Join</button>
         </form>
       </div>
     </div>
