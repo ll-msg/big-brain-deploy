@@ -1,13 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiCall } from './helper';
 import QuestionForm from './questionForm';
 
 function QuestionEdit() {
   const { gameId, questionId } = useParams();
-  console.log(questionId)
   const [error, setError] = useState('');
+  const [game, setGame] = useState('');
   const navigate = useNavigate();
+
+  // load original data
+  useEffect(() => {
+    const loadGame = async () => {
+      const data = await apiCall('GET', 'http://localhost:5005/admin/games', null, setError, 'Failed to load game');
+      const curGame = data.games.find(g => Number(g.id) === Number(gameId));
+      if (!curGame) return;
+      setGame(curGame);
+    };
+    loadGame();
+  }, [gameId]);
 
   // get new question
   const updateQuestion = async(updatedQuestion) => {
@@ -31,7 +42,7 @@ function QuestionEdit() {
   return (
     <div className="edit-question">
       {error && <p className="error-message">{error}</p>}
-      <QuestionForm mode="edit" questionId={questionId} gameId={gameId} onSubmit={updateQuestion} close={() => navigate(-1)}/>
+      <QuestionForm mode="edit" questionId={questionId} gameId={gameId} game={game} onSubmit={updateQuestion} close={() => navigate(-1)}/>
     </div>
   )
     
