@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiCall, convertYouTubeUrl } from './helper';
+import Lobby from './lobby';
 
 function Play() {
   const playerId = localStorage.getItem('playerId');
@@ -13,7 +14,9 @@ function Play() {
   const [correctAnswers, setCorrectAnswers] = useState([]);
   const [lastQuestion, setLastQuestion] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
+  const [pointsList, setPointsList] = useState([]);
   const navigate = useNavigate();
+  const lastQidRef = useRef(new Set());
 
   // check session status
   const isStarted = async() => {
@@ -52,6 +55,13 @@ function Play() {
         setSelectedAnswers([]);
         setShowAnswers(false);
         setLocked(false);  
+
+        // save question points for result
+        if (!lastQidRef.current.has(res.question.id)) {
+          console.log("store question: ", res.question.points)
+          setPointsList(prev => [...prev, res.question.points]);
+          lastQidRef.current.add(res.question.id);
+        }
       }
     }
 
@@ -73,9 +83,14 @@ function Play() {
 
   useEffect(() => {
     if (isFinished) {
-      navigate(`/session/play/${playerId}/result`);
+      console.log(pointsList)
+      navigate(`/session/play/${playerId}/result`, {
+        state: {
+          pointsList,
+        }
+      });
     }
-  }, [isFinished, navigate, playerId]);
+  }, [isFinished, navigate, playerId, pointsList]);
     
   // get correct answers
   const getCorrectAnswer = async() => {
@@ -134,9 +149,8 @@ function Play() {
   }
 
   // load current question
-  if (!curquestion) return <p>Please wait for the game to start...</p>;
+  if (!curquestion) return <Lobby />;
 
-    
   return (
     <div className="min-h-screen bg-neutral-900 text-white flex flex-col items-center justify-start px-4 py-10">
       
@@ -192,6 +206,3 @@ function Play() {
 }
 
 export default Play;
-
-// TODO: add video/image
-// timer => 0, show answers and lock the question
