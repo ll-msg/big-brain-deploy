@@ -1,23 +1,29 @@
 import { apiCall } from "./helper";
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 function PlayerResult() {
   const [error, setError] = useState('');
   const { playerId } = useParams();
   const [result, setResult] = useState([]);
+  const [finalScore, setfinalScore] = useState(0);
+  const location = useLocation();
+  const pointsList = location.state?.pointsList || [];
 
   const getPlayerResult = async() => {
     const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/results`, null, setError, 'Failed to retrieve player results');
+    let finalPoints = 0;
     const playerResult = res.map((r, i) => {
       const start = new Date(r.questionStartedAt).getTime();
       const end = new Date(r.answeredAt).getTime();
+      if (r.correct) finalPoints += pointsList[i];
       return {
         question: i + 1,
         correct: r.correct,
         timeTaken: Math.round((end - start) / 1000),
       }
     })
+    setfinalScore(finalPoints);
     setResult(playerResult);
   }
 
@@ -35,6 +41,7 @@ function PlayerResult() {
       <div className="bg-neutral-800 rounded-xl shadow-lg w-full max-w-2xl p-8 space-y-6">
         <h2 className="text-2xl font-bold text-center">Performance Summary</h2>
         <p className="text-center text-lg">You got {totalCorrect} / {result.length} questions correct.</p>
+        <p className="text-center text-lg">Your final score is: {finalScore}</p>
         <ul className="space-y-3">
           {result.map((p, i) => (
             <li key={i}>
@@ -56,5 +63,3 @@ function PlayerResult() {
 }
 
 export default PlayerResult;
-
-// TODO: get points list of questions
