@@ -35,7 +35,7 @@ function Login() {
     const data = await res.json();
     console.log(res)
     // save token - need to change
-    localStorage.setItem("token", data.token);
+    sessionStorage.setItem("token", data.token);
     localStorage.setItem("email", email);
     // set logged in status for navbar change
     window.dispatchEvent(new Event('loggedIn'));

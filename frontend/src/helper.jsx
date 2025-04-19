@@ -1,5 +1,5 @@
 export async function apiCall(method, url, data=null, setError, errorMsg, auth=true) {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
   };

@@ -41,8 +41,6 @@ function Register() {
       return;
     }
     const data = await res.json();
-    // save token - need to change
-    localStorage.setItem("token", data);
     console.log("Successfully register");
     // navigate to login page after registration
     navigate('/login');

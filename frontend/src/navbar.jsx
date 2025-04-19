@@ -10,7 +10,7 @@ function Navbar() {
 
   useEffect(() => {
     const checkLogin = () => {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       setIsLoggedIn(!!token);
     }
     checkLogin();
@@ -20,7 +20,7 @@ function Navbar() {
 
   const handleLogout = async() => {
     // clear token - need to change
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
 
     const res = await fetch('http://localhost:5005/admin/auth/logout', {
       method: 'POST',

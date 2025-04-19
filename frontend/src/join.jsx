@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiCall } from './helper';
 
-// the url should look like: http://localhost:3000/join?sessionId=***
+// the url should look like: http://localhost:port/join?sessionId=***
 // get session id passed by the admin
 const useQuery = () => new URLSearchParams(useLocation().search);
 
@@ -24,9 +24,9 @@ function Join() {
     const body = {
       name: username
     };
-    localStorage.setItem('player', username);
+    sessionStorage.setItem('player', username);
     const res = await apiCall('POST', `http://localhost:5005/play/join/${sessionId}`, body, setError, "Failed to join the game");
-    localStorage.setItem('playerId', res.playerId);
+    sessionStorage.setItem('playerId', res.playerId);
     navigate(`/session/play/${sessionId}`);
   }
 

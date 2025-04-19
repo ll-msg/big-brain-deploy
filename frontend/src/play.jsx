@@ -4,7 +4,7 @@ import { apiCall, convertYouTubeUrl } from './helper';
 import Lobby from './lobby';
 
 function Play() {
-  const playerId = localStorage.getItem('playerId');
+  const playerId = sessionStorage.getItem('playerId');
   const [error, setError] = useState('');
   const [curquestion, setcurQuestion] = useState(null);
   const [locked, setLocked] = useState('');
@@ -96,7 +96,7 @@ function Play() {
   const getCorrectAnswer = async() => {
     const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/answer`, null, setError, "Failed to get correct answers");
     if (res) {
-      setCorrectAnswers(res.answerIds);
+      setCorrectAnswers(res.answers);
     }
   }
 
