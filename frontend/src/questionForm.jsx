@@ -50,6 +50,11 @@ export default function QuestionForm({ mode, questionId, gameId, game, onSubmit,
   const handleSubmit = (e) => {
     e.preventDefault();
     const correctAnswers = answer.filter((a) => a.correct).map((a) => a.text.trim());
+    const hasOneChecked = answer.some(a => a.correct);
+    if (!hasOneChecked) {
+      alert("Please select at least one correct answer.");
+      return;
+    }
     const newQuestion = {
       id: mode === 'create' ? generateQuestionId(questions)  : questionId.toString() ,
       question,
