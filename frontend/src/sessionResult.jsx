@@ -68,11 +68,13 @@ function Result() {
   // calculate data needed for result chart
   const calculateResult = async(result) => {
     // assign array with answers total number
-    const num = result[0]?.answers.length || 0;
+    const num = result.reduce((max, player) => 
+      Math.max(max, player.answers.length), 0);
     const countCorrects = Array(num).fill(0);
     const countTotal = Array(num).fill(0);
     const times = Array(num).fill(0);
     const countTime = Array(num).fill(0);
+    
 
     result.forEach(player => {
       player.answers.forEach((a, i) => {
