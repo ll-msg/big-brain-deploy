@@ -109,7 +109,7 @@ function Lobby() {
 
                     {likePoem === false && (
                     <div className="mt-6 space-y-3">
-                        <p>It's OK! I’ve got something else for you.</p>
+                        <p>It's OK! I have got something else for you.</p>
                         <p>
                         Wanna see <a onClick={fetchJoke} className="underline text-blue-400 hover:text-blue-600 transition cursor-pointer">something</a> funny?
                         </p>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import gameIcon from './assets/game.png'
 import './main.css'
 
@@ -42,7 +41,7 @@ function Navbar() {
     <nav className="flex justify-between items-center bg-black px-5 py-2 shadow-xl h-17">
       <div className="flex items-center">
         <img src={gameIcon} alt="game" className="w-[30px] h-[30px] mr-2" />
-        <div className="text-white text-2xl font-bold">BigBrain</div>
+        <Link to='/' className="text-white text-2xl font-bold">BigBrain</Link>
       </div>
       <ul className="flex gap-5 list-none">
         {!isLoggedIn && (

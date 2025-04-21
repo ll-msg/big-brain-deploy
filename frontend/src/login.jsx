@@ -45,48 +45,50 @@ function Login() {
   }
 
   return (
-    <div className="flex flex-col w-[530px] bg-black mt-[100px] mx-auto pb-[40px]">
-      <div className="flex flex-col items-center gap-[9px] w-full mt-[30px]">
-        <div className="text-white text-[40px] font-bold">Login</div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-400 flex items-center justify-center">
+      <div className="flex flex-col w-[530px] bg-gray-800 mt-[100px] mx-auto pb-[40px]">
+        <div className="flex flex-col items-center gap-[9px] w-full mt-[30px]">
+          <div className="text-white text-[40px] font-bold">Login</div>
+        </div>
+        <form className="flex flex-col mt-[55px] gap-[25px]" onSubmit={handleLogin}>
+          {error && <p className="text-red-600 text-center">{error}</p>}
+          <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
+            <img src={emailIcon} alt="email" className="w-[20px] h-[20px] ml-[10px]" />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
+            <img src={passwordIcon} alt="password" className="w-[20px] h-[20px] ml-[10px]" />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="ml-[65px] text-white">
+                Have not got an account yet? <a href="/register" className="text-blue-600 underline">Register here</a>
+          </div>
+          <div className="flex gap-[30px] mx-auto mt-[60px]">
+            <button
+              className="w-[170px] h-[50px] text-black bg-white rounded-[40px] font-bold text-[17px] font-[Trebuchet_MS] cursor-pointer"
+              type="submit"
+            >
+                  Login
+            </button>
+          </div>
+        </form>
       </div>
-      <form className="flex flex-col mt-[55px] gap-[25px]" onSubmit={handleLogin}>
-        {error && <p className="text-red-600 text-center">{error}</p>}
-        <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
-          <img src={emailIcon} alt="email" className="w-[20px] h-[20px] ml-[10px]" />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex items-center mx-auto w-[380px] h-[50px] bg-[#e4e3e3] rounded-[6px]">
-          <img src={passwordIcon} alt="password" className="w-[20px] h-[20px] ml-[10px]" />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            className="h-[50px] w-[400px] border-none outline-none bg-transparent text-[15px] font-[Courier_New] pl-[30px] opacity-50"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className="ml-[65px] text-white">
-              Have not got an account yet? <a href="/register" className="text-blue-600 underline">Register here</a>
-        </div>
-        <div className="flex gap-[30px] mx-auto mt-[60px]">
-          <button
-            className="w-[170px] h-[50px] text-black bg-white rounded-[40px] font-bold text-[17px] font-[Trebuchet_MS] cursor-pointer"
-            type="submit"
-          >
-                Login
-          </button>
-        </div>
-      </form>
     </div>
   );
 }
