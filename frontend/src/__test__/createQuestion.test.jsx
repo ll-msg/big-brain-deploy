@@ -72,6 +72,11 @@ describe("create a new question test", () => {
         fireEvent.change(answerInputs[1], { target: { value: '6' } });
 
         fireEvent.click(screen.getByText('Create'));
+        expect(onCreate).not.toHaveBeenCalled();
+
+        const checkboxes = screen.getAllByRole('checkbox');
+        fireEvent.click(checkboxes[0]);
+        fireEvent.click(screen.getByText('Create'));
         expect(onCreate).toHaveBeenCalled(); 
     })
 

@@ -76,7 +76,7 @@ describe("start session modal test", () => {
 
     render(
       <div data-testid="modal-overlay" onClick={onClose}>
-        <div data-testid="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div onClick={(e) => e.stopPropagation()}>
           <Modal onClose={onClose}>
             <p>Game started</p>
             <p>Session ID:</p>

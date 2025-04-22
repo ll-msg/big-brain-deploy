@@ -46,7 +46,7 @@ describe('navbar component', () => {
 
   // logged in - has 3 new navigations
   it('shows logout if logged in', () => {
-    localStorage.setItem('token', 'fake-token');
+    sessionStorage.setItem('token', 'fake-token');
 
     render(
       <MemoryRouter>
