@@ -3,6 +3,7 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
+import cypress from "eslint-plugin-cypress";
 
 export default [
   { ignores: ["dist", "src/__test__", "**/*config.js"] },
@@ -50,4 +51,26 @@ export default [
       "react/prop-types": "off",
     },
   },
+  {
+    files: ["cypress/e2e/**/*.js"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.commonjs,
+        ...globals.jest,
+        cy: "readonly",
+        Cypress: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        expect: "readonly",
+      },
+    },
+    plugins: { cypress },
+    rules: {
+      ...cypress.configs.recommended.rules,
+    },
+  }
 ];
