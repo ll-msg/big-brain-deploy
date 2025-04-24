@@ -108,7 +108,7 @@ function Play() {
 
   useEffect(() => {
     if (showAnswer && curquestion) {
-        getCorrectAnswer();
+      getCorrectAnswer();
     }
   }, [showAnswer, curquestion]);
       
