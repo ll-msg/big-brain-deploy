@@ -40,13 +40,27 @@ function Play() {
   const getCurQuestion = async() => {
 
     const started = await isStarted();
+
+    if (started === null) {
+      console.log("Game finished.");
+      setIsFinished(true);
+      setLocked(true);
+      setShowAnswers(true);
+      return;
+    }
+    
+    
+    if (!started) {
+      console.log("Session not started yet, skip fetching question.");
+      return;
+    }
+
     const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/question`, null, setError, "Failed to retrieve current question");
-        
+    
     if (res === null && started === true) {
       console.log("Game started, but no question ready yet.");
       return;
     }
-        
         
     if (res) {
       if (!curquestion || res.question.id !== curquestion.id) {
@@ -65,13 +79,6 @@ function Play() {
       }
     }
 
-    if (res === null && started === null) {
-      console.log("Game finished.");
-      setIsFinished(true);
-      setLocked(true);
-      setShowAnswers(true);
-      return;
-    }
   }
 
   useEffect(() => {
