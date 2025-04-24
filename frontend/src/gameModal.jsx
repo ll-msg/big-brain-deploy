@@ -32,14 +32,16 @@ function CreateGameModal({ close, create }) {
           <h4 className="text-xl font-semibold">Create a new game</h4>
           <button onClick={close} className="text-gray-500 hover:text-black text-lg">&times;</button>
         </div>
-        <div className="space-y-4">
-          <input type="text" value={name} placeholder='Enter game name' onChange={(e) => setName(e.target.value)} />
-          <input type="file" accept="image/*" onChange={handleThumbNail} />
-        </div>
-        <div className="flex justify-end gap-4 pt-4">
-          <button name="create-game" onClick={handleSubmit} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Create</button>
-          <button onClick={close} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
-        </div>
+        <form onSubmit={(e) => { e.preventDefault(); handleSubmit();}}>
+          <div className="space-y-4">
+            <input type="text" value={name} placeholder='Enter game name' onChange={(e) => setName(e.target.value)} required/>
+            <input type="file" accept="image/*" onChange={handleThumbNail} />
+          </div>
+          <div className="flex justify-end gap-4 pt-4">
+            <button name="create-game" className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Create</button>
+            <button onClick={close} className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded">Cancel</button>
+          </div>
+        </form>
       </div>
     </div>
   );

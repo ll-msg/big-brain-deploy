@@ -49,7 +49,6 @@ function Play() {
       return;
     }
     
-    
     if (!started) {
       console.log("Session not started yet, skip fetching question.");
       return;
