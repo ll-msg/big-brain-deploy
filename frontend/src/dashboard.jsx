@@ -15,6 +15,7 @@ function Dashboard() {
   const [isModalopen, setModalopen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [filter, setFilter] = useState('');
 
   // retrieve games
   const handleGame = async() => {
@@ -82,9 +83,15 @@ function Dashboard() {
   // show all the games
   const renderGameList = () => {
     if (!game.games || game.games.length === 0) {
-      return <p>Currently no games</p>
+      return <p className="text-black text-lg text-center mt-6">Currently no games</p>
     }
-    return game.games.map((game) => (
+    const filtered = game.games.filter(g =>
+      g.name.toLowerCase().includes(filter.toLowerCase())
+    );
+    if (filtered.length === 0) {
+      return <p className="text-black text-lg text-center mt-6">No matched games found</p>;
+    }
+    return filtered.map((game) => (
       <GameCard
         key={game.id}
         game={game}
@@ -95,7 +102,7 @@ function Dashboard() {
         editGame={editGame}
         navigate={navigate}
       />
-    ));    
+    )); 
   }
 
   // go to question list of the game
@@ -141,6 +148,14 @@ function Dashboard() {
 
   return (
     <div className="game-container flex flex-col items-center px-4 py-8 space-y-8">
+      <input
+        type="text"
+        placeholder="Search games..."
+        className="mb-4 px-4 py-2 border border-gray-300 rounded-md w-full max-w-md"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+      />
+
 
       {error && <p className="error-message">{error}</p>}
 
