@@ -19,7 +19,7 @@ function Register() {
     e.preventDefault();
     // confirm password
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      alert('Passwords do not match');
       return;
     }
 
