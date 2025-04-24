@@ -100,7 +100,7 @@ function Play() {
     
   // get correct answers
   const getCorrectAnswer = async() => {
-    const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/answer`, null, setError, "Failed to get correct answers");
+    const res = await apiCall('GET', `http://localhost:5005/play/${playerId}/answer`, null, null, "Failed to get correct answers");
     if (res) {
       setCorrectAnswers(res.answers);
     }
@@ -108,7 +108,7 @@ function Play() {
 
   useEffect(() => {
     if (showAnswer && curquestion) {
-      getCorrectAnswer();
+        getCorrectAnswer();
     }
   }, [showAnswer, curquestion]);
       
